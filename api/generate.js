@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     });
 
     const bodyBuffer = Buffer.from(geminiBody, 'utf8');
-    const path = `/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const path = `/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
 
     const result = await new Promise((resolve, reject) => {
       const options = {
