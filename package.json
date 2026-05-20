@@ -1,8 +1,6 @@
 {
   "name": "revise-ai",
   "version": "1.0.0",
-  "description": "Revise AI - Smart Study Assistant",
-  "dependencies": {
-    "stripe": "^14.0.0"
-  }
+  "engines": { "node": "18.x" },
+  "dependencies": { "stripe": "^14.0.0" }
 }
