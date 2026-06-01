@@ -592,15 +592,36 @@ function initSupabase() {
       sb.auth.onAuthStateChange(async (_evt, session) => {
         if (session && session.user) {
           currentUser = session.user;
+          localStorage.setItem('sb_user', JSON.stringify(currentUser));
           await loadProfile();
-        } else {
-          currentUser = null; userProfile = null;
-          refreshUI();
-          document.getElementById('sets-list').innerHTML = '<div class="empty-sets" id="sets-empty">Sign in &amp; upgrade to save sets</div>';
         }
       });
     }
   } catch(e) { console.warn('Supabase init error', e); }
+  // Restore session from localStorage — works on Safari and all browsers
+  restoreSession();
+}
+
+async function restoreSession() {
+  try {
+    const token = localStorage.getItem('sb_access_token');
+    const refresh = localStorage.getItem('sb_refresh_token');
+    const savedUser = localStorage.getItem('sb_user');
+    if (token && savedUser) {
+      currentUser = JSON.parse(savedUser);
+      if (sb && token) {
+        try {
+          const { data } = await sb.auth.setSession({ access_token: token, refresh_token: refresh || '' });
+          if (data && data.user) currentUser = data.user;
+        } catch(e) {}
+      }
+      await loadProfile();
+    } else {
+      refreshUI();
+    }
+  } catch(e) {
+    refreshUI();
+  }
 }
 
 // pdf.js
@@ -726,34 +747,55 @@ function toggleAuthMode() {
   document.getElementById('auth-err').classList.remove('show');
 }
 async function handleAuth() {
-  if (!sb) { toast('Service unavailable — please try again shortly','error'); return; }
   const email = document.getElementById('a-email').value.trim();
   const pw = document.getElementById('a-pw').value;
   const err = document.getElementById('auth-err');
   const btn = document.getElementById('auth-btn');
   err.classList.remove('show');
   if (!email||!pw) { err.textContent='Please fill in all fields'; err.classList.add('show'); return; }
+  if (authMode==='signup') {
+    const c=document.getElementById('a-confirm').value;
+    if (pw!==c) { err.textContent='Passwords do not match'; err.classList.add('show'); return; }
+  }
   btn.disabled=true; btn.textContent='Please wait…';
   try {
-    let res;
-    if (authMode==='signup') {
-      const c=document.getElementById('a-confirm').value;
-      if (pw!==c) { err.textContent='Passwords do not match'; err.classList.add('show'); btn.disabled=false; btn.textContent='Create Account'; return; }
-      res = await sb.auth.signUp({email,password:pw});
-    } else {
-      res = await sb.auth.signInWithPassword({email,password:pw});
+    // Use our backend proxy to avoid browser cross-site tracking issues
+    const res = await fetch(API_BASE+'/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: authMode, email, password: pw })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Authentication failed');
+
+    // Store session locally and set up user
+    currentUser = data.user || { id: data.id, email };
+    if (data.access_token) {
+      localStorage.setItem('sb_access_token', data.access_token);
+      localStorage.setItem('sb_refresh_token', data.refresh_token || '');
+      localStorage.setItem('sb_user', JSON.stringify(currentUser));
+      // Also sign in via Supabase client if available (for realtime features)
+      if (sb) {
+        try {
+          await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token || '' });
+        } catch(e) {}
+      }
     }
-    if (res.error) throw res.error;
+    await loadProfile();
     closeM('m-auth');
-    toast(authMode==='signup'?'✓ Account created! Check your email.':'✓ Signed in!','success');
+    toast(authMode==='signup' ? '✓ Account created! Check your email to verify.' : '✓ Signed in!', 'success');
   } catch(e) { err.textContent=e.message||'Something went wrong'; err.classList.add('show'); }
   btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
 }
 async function doSignOut() {
-  if (!sb) return;
-  await sb.auth.signOut();
+  localStorage.removeItem('sb_access_token');
+  localStorage.removeItem('sb_refresh_token');
+  localStorage.removeItem('sb_user');
+  if (sb) { try { await sb.auth.signOut(); } catch(e) {} }
   currentUser=null; userProfile=null;
+  savedSets=[]; cardProgress={};
   refreshUI();
+  document.getElementById('sets-list').innerHTML='<div class="empty-sets">Sign in & upgrade to save sets</div>';
   toast('Signed out','success');
 }
 
