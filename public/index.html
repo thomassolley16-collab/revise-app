@@ -759,7 +759,6 @@ async function handleAuth() {
   }
   btn.disabled=true; btn.textContent='Please wait…';
   try {
-    // Use our backend proxy to avoid browser cross-site tracking issues
     const res = await fetch(API_BASE+'/api/auth', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -768,22 +767,24 @@ async function handleAuth() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Authentication failed');
 
-    // Store session locally and set up user
-    currentUser = data.user || { id: data.id, email };
-    if (data.access_token) {
-      localStorage.setItem('sb_access_token', data.access_token);
-      localStorage.setItem('sb_refresh_token', data.refresh_token || '');
-      localStorage.setItem('sb_user', JSON.stringify(currentUser));
-      // Also sign in via Supabase client if available (for realtime features)
-      if (sb) {
-        try {
-          await sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token || '' });
-        } catch(e) {}
-      }
-    }
-    await loadProfile();
+    // Build user object from response
+    const user = data.user || { id: data.id || data.user_id, email };
+    currentUser = user;
+
+    // Save to localStorage so it persists across page loads on all browsers
+    localStorage.setItem('sb_access_token', data.access_token || '');
+    localStorage.setItem('sb_refresh_token', data.refresh_token || '');
+    localStorage.setItem('sb_user', JSON.stringify(currentUser));
+
+    // Close modal and update UI immediately — don't wait for Supabase
     closeM('m-auth');
-    toast(authMode==='signup' ? '✓ Account created! Check your email to verify.' : '✓ Signed in!', 'success');
+    toast(authMode==='signup' ? '✓ Account created!' : '✓ Signed in!', 'success');
+    btn.disabled=false;
+    btn.textContent=authMode==='signup'?'Create Account':'Sign In';
+
+    // Load profile in background
+    loadProfile().catch(()=>{});
+    return;
   } catch(e) { err.textContent=e.message||'Something went wrong'; err.classList.add('show'); }
   btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
 }
@@ -801,9 +802,19 @@ async function doSignOut() {
 
 // ─── PROFILE ────────────────────────────────────────────────────────────────
 async function loadProfile() {
-  if (!sb||!currentUser) return;
+  if (!currentUser) { refreshUI(); return; }
+  // Set a basic profile immediately so UI updates right away
+  if (!userProfile) {
+    userProfile = {id:currentUser.id, email:currentUser.email, is_premium:false, free_generates_used:0};
+  }
+  refreshUI();
+  // Then try to load real profile from Supabase in background
+  if (!sb) return;
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
     const {data} = await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+    clearTimeout(timeout);
     if (!data) {
       await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,is_premium:false,free_generates_used:0});
       userProfile = {id:currentUser.id,email:currentUser.email,is_premium:false,free_generates_used:0};
@@ -811,9 +822,12 @@ async function loadProfile() {
       userProfile = data;
       freeUsed = data.free_generates_used||freeUsed;
     }
-  } catch(e) { userProfile = {id:currentUser.id,email:currentUser.email,is_premium:false}; }
+  } catch(e) {
+    // Keep basic profile if Supabase is unreachable
+    userProfile = {id:currentUser.id,email:currentUser.email,is_premium:false};
+  }
   refreshUI();
-  loadSets();
+  loadSets().catch(()=>{});
 }
 
 // ─── UI REFRESH ──────────────────────────────────────────────────────────────
