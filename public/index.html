@@ -581,7 +581,7 @@ const STRIPE_PK = 'pk_live_51TJDhdFQrs54wu3KpMYYxYSJBPJlQX7PWdIJRgV0YxRPhxryEueG
 const API_BASE = '';
 let stripeInstance = null;
 let checkoutInstance = null;
-const FREE_MAX = 3;
+const FREE_MAX = 5;
 
 // ─── LIBRARY INIT (safe, deferred) ─────────────────────────────────────────
 let sb = null;
@@ -609,12 +609,16 @@ async function restoreSession() {
     const savedUser = localStorage.getItem('sb_user');
     if (token && savedUser) {
       currentUser = JSON.parse(savedUser);
+      // Show basic UI immediately
+      refreshUI();
+      // Try to restore Supabase session
       if (sb && token) {
         try {
           const { data } = await sb.auth.setSession({ access_token: token, refresh_token: refresh || '' });
           if (data && data.user) currentUser = data.user;
         } catch(e) {}
       }
+      // Always load fresh profile from DB — ensures Pro status is current
       await loadProfile();
     } else {
       refreshUI();
@@ -792,12 +796,19 @@ async function doSignOut() {
   localStorage.removeItem('sb_access_token');
   localStorage.removeItem('sb_refresh_token');
   localStorage.removeItem('sb_user');
+  localStorage.removeItem('freeUsed');
   if (sb) { try { await sb.auth.signOut(); } catch(e) {} }
   currentUser=null; userProfile=null;
-  savedSets=[]; cardProgress={};
+  savedSets=[]; cardProgress={}; freeUsed=0;
+  closeM('m-settings');
+  closeMobDrawer();
   refreshUI();
   document.getElementById('sets-list').innerHTML='<div class="empty-sets">Sign in & upgrade to save sets</div>';
-  toast('Signed out','success');
+  document.getElementById('auth-nav-btn').textContent='Sign in';
+  document.getElementById('nav-badge').innerHTML='';
+  document.getElementById('upgrade-nav-btn').style.display='none';
+  document.getElementById('pro-banner').style.display='block';
+  toast('Signed out successfully','success');
 }
 
 // ─── PROFILE ────────────────────────────────────────────────────────────────
@@ -811,19 +822,18 @@ async function loadProfile() {
   // Then try to load real profile from Supabase in background
   if (!sb) return;
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
     const {data} = await sb.from('profiles').select('*').eq('id',currentUser.id).single();
-    clearTimeout(timeout);
     if (!data) {
       await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,is_premium:false,free_generates_used:0});
       userProfile = {id:currentUser.id,email:currentUser.email,is_premium:false,free_generates_used:0};
+      freeUsed = 0;
     } else {
       userProfile = data;
-      freeUsed = data.free_generates_used||freeUsed;
+      // Always use server count when signed in — fixes multi-device issue
+      freeUsed = data.free_generates_used || 0;
+      localStorage.setItem('freeUsed', freeUsed);
     }
   } catch(e) {
-    // Keep basic profile if Supabase is unreachable
     userProfile = {id:currentUser.id,email:currentUser.email,is_premium:false};
   }
   refreshUI();
@@ -1159,7 +1169,19 @@ ${notes}`,
 
 Notes:
 ${notes}`,
-    essay:`You are an expert ${subject} examiner for ${lc}. Evaluate this answer. Return ONLY valid JSON: {"grade":"...","overall":"...","strengths":"...","improvements":"...","scores":{"knowledge":7,"analysis":6,"evaluation":6,"communication":7}}. Use ${gs}.
+    essay:`You are a senior ${subject} examiner for ${lc} with 20 years experience marking exam scripts. Carefully read the student answer below and provide detailed, accurate feedback as if marking a real exam paper.
+
+You must return ONLY valid JSON in this exact format, no markdown:
+{"grade":"...","overall":"...","strengths":"...","improvements":"...","examinerComment":"...","markSchemePoints":["...","...","..."],"scores":{"knowledge":7,"analysis":6,"evaluation":6,"communication":7}}
+
+Rules:
+- grade: use ${gs} — be accurate and strict, not generous
+- overall: 3-4 sentences summarising the answer quality honestly
+- strengths: specific things done well with examples from the answer
+- improvements: precise, actionable advice referencing ${lc} mark scheme expectations
+- examinerComment: what a real examiner would write on the script
+- markSchemePoints: list 3-5 key points from the mark scheme this answer did or did not hit
+- scores: mark each out of 10 honestly — do not round up to be kind
 
 Student answer:
 ${notes}`,
