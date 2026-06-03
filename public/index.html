@@ -253,6 +253,73 @@ textarea:focus{outline:none;border-color:var(--accent)}
 .toast.error{border-color:rgba(239,68,68,.4)}
 .fade-in{animation:fi .3s ease}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* TOP TABS */
+.app-tabs{display:flex;gap:2px;padding:0 1.5rem;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:54px;z-index:50;overflow-x:auto}
+.app-tab{padding:10px 16px;font-family:var(--ff);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.app-tab:hover{color:var(--text)}
+.app-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}
+.tab-panel.active{display:flex;flex-direction:column;flex:1;overflow:hidden}
+
+/* TIMETABLE PANEL */
+.tt-panel{padding:1.25rem 1.5rem;overflow-y:auto;flex:1}
+.tt-setup{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.tt-setup h3{font-family:var(--fd);font-size:1.2rem;font-weight:400;margin-bottom:4px}
+.tt-setup p{font-size:13px;color:var(--muted);margin-bottom:1rem}
+.tt-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.tt-form-grid input,.tt-form-grid select{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px;width:100%}
+.tt-form-grid input:focus,.tt-form-grid select:focus{outline:none;border-color:var(--accent)}
+.exam-add-row{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+.exam-add-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px}
+.exam-add-row input:focus{outline:none;border-color:var(--accent)}
+.exam-add-row input[type=date]{width:140px;flex:none}
+.exam-add-row .add-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.exam-add-row .add-btn:hover{background:#6a4ef0}
+.exams-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.exam-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:12px}
+.exam-card-info{flex:1}
+.exam-card-name{font-size:14px;font-weight:500}
+.exam-card-date{font-size:12px;color:var(--muted);margin-top:1px}
+.exam-card-days{text-align:right}
+.exam-card-num{font-size:22px;font-family:var(--fd);font-weight:600}
+.exam-card-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.exam-card-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:3px 6px;border-radius:5px}
+.exam-card-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.gen-tt-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-family:var(--ff);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.gen-tt-btn:hover{background:#6a4ef0}
+.tt-week{margin-top:1rem}
+.tt-week-title{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.tt-day-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.tt-day-hd{padding:10px 14px;background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.tt-day-hd-name{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.tt-today-pill{background:var(--accent);color:#fff;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700}
+.tt-day-hd-date{font-size:11px;color:var(--muted)}
+.tt-session-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:background .15s}
+.tt-session-row:hover{background:var(--surface2)}
+.tt-session-row.completed{opacity:.45}
+.tt-chk{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:12px}
+.tt-chk.done{background:var(--green);border-color:var(--green);color:#fff}
+.tt-sess-subj{flex:1;font-size:14px;font-weight:500}
+.tt-sess-meta{font-size:11px;color:var(--muted);text-align:right}
+.tt-sess-time{font-size:12px;color:var(--muted)}
+.tt-rest{padding:12px 14px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tt-progress-bar{height:3px;background:var(--surface2)}
+.tt-progress-fill{height:3px;background:var(--green);transition:width .3s}
+
+/* PROGRESS PANEL */
+.prog-panel{padding:1.25rem 1.5rem;overflow-y:auto;flex:1}
+.prog-top-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.prog-mini{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 12px;text-align:center}
+.prog-mini-val{font-size:22px;font-family:var(--fd)}
+.prog-mini-label{font-size:10px;color:var(--muted);margin-top:2px}
+
+@media(max-width:768px){
+  .app-tabs{padding:0 1rem;top:50px}
+  .app-tab{padding:8px 12px;font-size:12px}
+  .tt-panel,.prog-panel{padding:.9rem 1rem}
+  .prog-top-row{grid-template-columns:1fr 1fr}
+  .tt-form-grid{grid-template-columns:1fr}
+}
 
 /* COUNT SELECTOR */
 .count-selector{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
@@ -735,54 +802,168 @@ textarea:focus{outline:none;border-color:var(--accent)}
   </aside>
 
   <!-- MAIN -->
-  <main class="main">
-    <div class="ipanel">
-      <h2>Paste your notes, <em>get smarter.</em></h2>
-      <p>Add text, upload a PDF, or take a photo of your notes</p>
-      <div class="upload-row">
-        <label class="upbtn" id="pdf-lbl" onclick="checkProFeature(event,'upload')">
-          📎 Upload PDF / Image <span class="lock" id="pdf-lock">⭐</span>
-          <input type="file" id="file-input" accept=".pdf,image/*" style="display:none" onchange="handleFile(this)">
-        </label>
-        <label class="upbtn" id="cam-lbl" onclick="checkProFeature(event,'upload')">
-          📷 Camera <span class="lock" id="cam-lock">⭐</span>
-          <input type="file" id="img-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this)">
-        </label>
-      </div>
-      <div class="upload-status" id="upstatus"><div class="spin"></div><span id="upmsg">Extracting text…</span></div>
-      <textarea id="notes" placeholder="e.g. The cell cycle consists of interphase and mitotic phase…"></textarea>
-      <div class="chips">
-        <span style="font-size:11px;color:var(--muted);padding:4px 0">Try a sample:</span>
-        <span class="chip" onclick="loadSample('bio')">Cell Division</span>
-        <span class="chip" onclick="loadSample('hist')">WW1 Causes</span>
-        <span class="chip" onclick="loadSample('chem')">Moles & Equations</span>
-        <span class="chip" onclick="loadSample('physics')">Newton's Laws</span>
-        <span class="chip" onclick="loadSample('psych')">Memory Models</span>
-        <span class="chip" onclick="loadSample('econ')">Supply & Demand</span>
-      </div>
-      <div class="count-selector" id="count-selector">
-        <span class="count-label" id="count-label">Flashcards:</span>
-        <div class="count-btns" id="count-btns">
-          <button class="cbtn" onclick="setCount(4,this)">4</button>
-          <button class="cbtn active" onclick="setCount(6,this)">6</button>
-          <button class="cbtn" onclick="setCount(8,this)">8</button>
-          <button class="cbtn" onclick="setCount(10,this)">10</button>
-          <button class="cbtn" onclick="setCount(12,this)">12</button>
+  <main class="main" style="overflow:hidden;display:flex;flex-direction:column">
+
+    <!-- TOP TABS -->
+    <div class="app-tabs">
+      <button class="app-tab active" id="tab-study" onclick="switchTab('study')">✦ Study</button>
+      <button class="app-tab" id="tab-timetable" onclick="switchTab('timetable')">📅 Timetable</button>
+      <button class="app-tab" id="tab-progress" onclick="switchTab('progress')">📊 Progress</button>
+    </div>
+
+    <!-- STUDY TAB -->
+    <div class="tab-panel active" id="panel-study" style="overflow:hidden">
+      <div class="ipanel">
+        <h2>Paste your notes, <em>get smarter.</em></h2>
+        <p>Add text, upload a PDF, or take a photo of your notes</p>
+        <div class="upload-row">
+          <label class="upbtn" id="pdf-lbl" onclick="checkProFeature(event,'upload')">
+            📎 Upload PDF / Image <span class="lock" id="pdf-lock">⭐</span>
+            <input type="file" id="file-input" accept=".pdf,image/*" style="display:none" onchange="handleFile(this)">
+          </label>
+          <label class="upbtn" id="cam-lbl" onclick="checkProFeature(event,'upload')">
+            📷 Camera <span class="lock" id="cam-lock">⭐</span>
+            <input type="file" id="img-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this)">
+          </label>
+        </div>
+        <div class="upload-status" id="upstatus"><div class="spin"></div><span id="upmsg">Extracting text…</span></div>
+        <textarea id="notes" placeholder="e.g. The cell cycle consists of interphase and mitotic phase…"></textarea>
+        <div class="chips">
+          <span style="font-size:11px;color:var(--muted);padding:4px 0">Try a sample:</span>
+          <span class="chip" onclick="loadSample('bio')">Cell Division</span>
+          <span class="chip" onclick="loadSample('hist')">WW1 Causes</span>
+          <span class="chip" onclick="loadSample('chem')">Moles & Equations</span>
+          <span class="chip" onclick="loadSample('physics')">Newton's Laws</span>
+          <span class="chip" onclick="loadSample('psych')">Memory Models</span>
+          <span class="chip" onclick="loadSample('econ')">Supply & Demand</span>
+        </div>
+        <div class="count-selector" id="count-selector">
+          <span class="count-label" id="count-label">Number of cards:</span>
+          <div class="count-btns" id="count-btns">
+            <button class="cbtn" onclick="setCount(4,this)">4</button>
+            <button class="cbtn active" onclick="setCount(6,this)">6</button>
+            <button class="cbtn" onclick="setCount(8,this)">8</button>
+            <button class="cbtn" onclick="setCount(10,this)">10</button>
+            <button class="cbtn" onclick="setCount(12,this)">12</button>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="gen-btn" id="gen-btn" onclick="generate()"><span id="gen-txt">✦ Generate</span></button>
+          <span class="ccount" id="ccount">0 characters</span>
         </div>
       </div>
-      <div class="action-row">
-        <button class="gen-btn" id="gen-btn" onclick="generate()"><span id="gen-txt">✦ Generate</span></button>
-        <button class="gen-btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)" onclick="openProgress()">📊 Progress</button>
-        <span class="ccount" id="ccount">0 characters</span>
+      <div class="rpanel" id="results">
+        <div class="empty">
+          <div class="empty-icon">✦</div>
+          <h3>Ready when you are</h3>
+          <p>Paste your notes above and choose a study mode to get started</p>
+        </div>
       </div>
     </div>
-    <div class="rpanel" id="results">
-      <div class="empty">
-        <div class="empty-icon">✦</div>
-        <h3>Ready when you are</h3>
-        <p>Paste your notes above and choose a study mode to get started</p>
+
+    <!-- TIMETABLE TAB -->
+    <div class="tab-panel" id="panel-timetable">
+      <div class="tt-panel">
+
+        <!-- EXAM SETUP -->
+        <div class="tt-setup">
+          <h3>📅 Your Exams</h3>
+          <p>Add your exam dates and we'll build your revision timetable automatically</p>
+          <div class="exam-add-row">
+            <input type="text" id="exam-name-input" placeholder="e.g. Biology Paper 1">
+            <input type="date" id="exam-date-input">
+            <button class="add-btn" onclick="addExam()">+ Add Exam</button>
+          </div>
+          <div class="exams-list" id="exams-list-main">
+            <div style="font-size:13px;color:var(--muted);padding:8px 0">No exams added yet — add one above to get started</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500">Daily study goal</div>
+              <select id="daily-goal-select" class="esel" onchange="localStorage.setItem('daily_goal',this.value)">
+                <option value="1">1 session/day</option>
+                <option value="2">2 sessions/day</option>
+                <option value="3" selected>3 sessions/day</option>
+                <option value="4">4 sessions/day</option>
+                <option value="5">5 sessions/day</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500">Session length</div>
+              <select id="session-len-select" class="esel">
+                <option value="30">30 minutes</option>
+                <option value="45" selected>45 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
+              </select>
+            </div>
+          </div>
+          <button class="gen-tt-btn" onclick="generateTimetable()">🗓️ Generate My Revision Timetable</button>
+        </div>
+
+        <!-- TIMETABLE OUTPUT -->
+        <div class="tt-week" id="tt-week-output" style="display:none">
+          <div class="tt-week-title">This Week's Revision Plan</div>
+          <div id="tt-days-container"></div>
+        </div>
+
       </div>
     </div>
+
+    <!-- PROGRESS TAB -->
+    <div class="tab-panel" id="panel-progress">
+      <div class="prog-panel" id="prog-panel-content">
+        <div class="prog-top-row">
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-streak">🔥 0</div><div class="prog-mini-label">Day Streak</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-sessions">0</div><div class="prog-mini-label">Total Sessions</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-cards">0</div><div class="prog-mini-label">Cards Made</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-quiz">0</div><div class="prog-mini-label">Quiz Answers</div></div>
+        </div>
+
+        <!-- DAILY GOAL -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Today's Goal</div>
+          <div class="goal-ring-wrap">
+            <div class="goal-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="6"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="6"
+                  stroke-dasharray="163" id="goal-ring-circle" stroke-dashoffset="163" stroke-linecap="round"/>
+              </svg>
+              <div class="goal-ring-text">
+                <div class="goal-ring-pct" id="goal-ring-pct">0%</div>
+                <div class="goal-ring-sub">done</div>
+              </div>
+            </div>
+            <div class="goal-info">
+              <div class="goal-title" id="goal-title-prog">Complete 3 revision sessions today</div>
+              <div id="goal-sub-prog" style="font-size:11px;color:var(--muted)">0 of 3 done</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEEKLY CHART -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">This Week</div>
+          <div class="mini-chart" id="prog-weekly-chart"></div>
+          <div class="chart-labels" id="prog-weekly-labels"></div>
+          <div class="streak-row" id="prog-streak-row" style="margin-top:10px"></div>
+        </div>
+
+        <!-- SUBJECT BREAKDOWN -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Subject Breakdown</div>
+          <div id="prog-subj-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate flashcards to see subject progress</div></div>
+        </div>
+
+        <!-- BADGES -->
+        <div class="prog-card">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Achievements</div>
+          <div class="badges-grid" id="prog-badges-grid"></div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -1664,112 +1845,99 @@ function checkBadges(stats) {
   });
 }
 
-function openProgress() {
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  if (tab==='progress') refreshProgressPanel();
+  if (tab==='timetable') { renderExamsMain(); renderTimetableMain(); }
+}
+
+function openProgress() { switchTab('progress'); }
+
+function refreshProgressPanel() {
   const stats = getStats();
   const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  const todayKey = today.toISOString().split('T')[0];
 
-  // Update stats
-  document.getElementById('prog-streak').textContent = stats.streak||0;
-  document.getElementById('prog-total').textContent = stats.totalSessions||0;
-  document.getElementById('prog-cards').textContent = stats.totalCards||0;
-  document.getElementById('prog-quiz').textContent = stats.totalQuiz||0;
+  // Top stats
+  document.getElementById('pg-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('pg-sessions').textContent = stats.totalSessions||0;
+  document.getElementById('pg-cards').textContent = stats.totalCards||0;
+  document.getElementById('pg-quiz').textContent = stats.totalQuiz||0;
 
-  // Daily goal ring
+  // Goal ring
   const dailyGoal = parseInt(localStorage.getItem('daily_goal')||'3');
   const todayDone = stats.todaySessions||0;
   const pct = Math.min(100, Math.round(todayDone/dailyGoal*100));
-  const circumference = 163;
-  const offset = circumference - (pct/100)*circumference;
-  document.getElementById('goal-ring-circle').style.strokeDashoffset = offset;
+  document.getElementById('goal-ring-circle').style.strokeDashoffset = 163-(pct/100)*163;
   document.getElementById('goal-ring-pct').textContent = pct+'%';
-  document.getElementById('goal-title').textContent = `Complete ${dailyGoal} revision sessions today`;
-  document.getElementById('goal-sub').innerHTML = `${todayDone} of ${dailyGoal} done · <span style="color:var(--accent);cursor:pointer" onclick="changeGoal()">Change goal</span>`;
+  document.getElementById('goal-title-prog').textContent = 'Complete '+dailyGoal+' sessions today';
+  document.getElementById('goal-sub-prog').textContent = todayDone+' of '+dailyGoal+' done';
 
   // Weekly chart
-  const chart = document.getElementById('weekly-chart');
-  const labels = document.getElementById('weekly-labels');
-  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const today = new Date();
+  const chart = document.getElementById('prog-weekly-chart');
+  const labels = document.getElementById('prog-weekly-labels');
   chart.innerHTML=''; labels.innerHTML='';
-  const maxVal = Math.max(1,...Array.from({length:7},(_,i)=>{
+  const vals = Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    return (stats.weeklyData||{})[d.toISOString().split('T')[0]]||0;
+  });
+  const maxVal = Math.max(1,...vals);
+  vals.forEach((val,i)=>{
     const d=new Date(today); d.setDate(d.getDate()-6+i);
     const key=d.toISOString().split('T')[0];
-    return (stats.weeklyData||{})[key]||0;
-  }));
-  Array.from({length:7},(_,i)=>{
-    const d=new Date(today); d.setDate(d.getDate()-6+i);
-    const key=d.toISOString().split('T')[0];
-    const val=(stats.weeklyData||{})[key]||0;
-    const isToday=key===today.toISOString().split('T')[0];
+    const isToday=key===todayKey;
     const bar=document.createElement('div');
-    bar.className='chart-bar'+(isToday?' active':'');
-    bar.style.height=Math.max(4,Math.round((val/maxVal)*50))+'px';
-    bar.title=val+' sessions';
-    if(isToday) bar.style.opacity='1';
+    bar.className='chart-bar'; bar.style.height=Math.max(4,Math.round((val/maxVal)*50))+'px';
+    if(isToday||val>0) bar.style.opacity='1'; else bar.style.opacity='.25';
+    if(isToday) bar.style.background='var(--accent)';
     chart.appendChild(bar);
-    const lbl=document.createElement('div');
-    lbl.className='chart-label';
-    lbl.textContent=days[d.getDay()];
+    const lbl=document.createElement('div'); lbl.className='chart-label';
+    lbl.textContent=days[d.getDay()][0]+(isToday?'*':'');
+    if(isToday) lbl.style.color='var(--accent)';
     labels.appendChild(lbl);
   });
 
-  // Streak calendar
-  const streakRow = document.getElementById('streak-row');
-  streakRow.innerHTML='';
+  // Streak row
+  const streakRow=document.getElementById('prog-streak-row'); streakRow.innerHTML='';
   Array.from({length:7},(_,i)=>{
     const d=new Date(today); d.setDate(d.getDate()-6+i);
     const key=d.toISOString().split('T')[0];
-    const todayKey=today.toISOString().split('T')[0];
     const val=(stats.weeklyData||{})[key]||0;
-    const div=document.createElement('div');
     const isToday=key===todayKey;
+    const div=document.createElement('div');
     div.className='streak-day '+(isToday?'today':val>0?'done':'missed');
     div.textContent=days[d.getDay()][0];
     div.title=days[d.getDay()]+': '+(val>0?val+' sessions':'No activity');
     streakRow.appendChild(div);
   });
 
-  // Subject progress
-  const subjList=document.getElementById('subj-prog-list');
+  // Subject breakdown
+  const subjList=document.getElementById('prog-subj-list');
   const ss=stats.subjectStats||{};
-  if(Object.keys(ss).length===0){
-    subjList.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate some flashcards to see subject progress</div>';
+  if(!Object.keys(ss).length){
+    subjList.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate flashcards to see subject progress</div>';
   } else {
     const max=Math.max(...Object.values(ss));
-    subjList.innerHTML=Object.entries(ss).sort((a,b)=>b[1]-a[1]).map(([subj,count])=>`
+    subjList.innerHTML='<div class="subj-prog-list">'+Object.entries(ss).sort((a,b)=>b[1]-a[1]).map(([subj,count])=>`
       <div class="subj-prog-row">
-        <div class="subj-prog-top">
-          <span class="subj-prog-name">${subj}</span>
-          <span class="subj-prog-pct">${count} session${count>1?'s':''}</span>
-        </div>
+        <div class="subj-prog-top"><span class="subj-prog-name">${subj}</span><span class="subj-prog-pct">${count} session${count>1?'s':''}</span></div>
         <div class="subj-prog-bg"><div class="subj-prog-fill" style="width:${Math.round(count/max*100)}%"></div></div>
-      </div>`).join('');
+      </div>`).join('')+'</div>';
   }
 
-  // Exam countdowns
-  renderExams();
-
   // Badges
-  const badgesGrid=document.getElementById('badges-grid');
+  const badgesGrid=document.getElementById('prog-badges-grid');
   badgesGrid.innerHTML=BADGES.map(b=>`
     <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" title="${b.desc}">
       <div class="badge-icon">${b.icon}</div>
       <div class="badge-name">${b.name}</div>
     </div>`).join('');
-
-  // Timetable
-  renderTimetable();
-
-  openM('m-progress');
-}
-
-function changeGoal() {
-  const current = localStorage.getItem('daily_goal')||'3';
-  const val = prompt('Set your daily goal (sessions per day):', current);
-  if (val && !isNaN(val) && parseInt(val)>0) {
-    localStorage.setItem('daily_goal', parseInt(val));
-    openProgress();
-  }
 }
 
 // Exams
@@ -1783,28 +1951,37 @@ function addExam() {
   localStorage.setItem('exams', JSON.stringify(exams));
   document.getElementById('exam-name-input').value='';
   document.getElementById('exam-date-input').value='';
-  renderExams();
+  renderExamsMain();
 }
 
-function renderExams() {
-  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
-  const list = document.getElementById('exam-list');
-  if (!exams.length) { list.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">No exams added yet</div>'; return; }
+function getExamDays(dateStr) {
   const now = new Date(); now.setHours(0,0,0,0);
+  const examDate = new Date(dateStr); examDate.setHours(0,0,0,0);
+  return Math.round((examDate-now)/(1000*60*60*24));
+}
+
+function renderExamsMain() {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const list = document.getElementById('exams-list-main');
+  if (!list) return;
+  if (!exams.length) {
+    list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:8px 0">No exams added yet — add one above to get started</div>';
+    return;
+  }
   list.innerHTML = exams.map(e=>{
-    const examDate = new Date(e.date); examDate.setHours(0,0,0,0);
-    const days = Math.round((examDate-now)/(1000*60*60*24));
+    const days = getExamDays(e.date);
     const colour = days<=7?'var(--red)':days<=14?'var(--amber)':'var(--green)';
-    return `<div class="exam-item">
-      <div>
-        <div class="exam-name">${e.name}</div>
-        <div class="exam-meta">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})}</div>
+    const label = days>0?days+' days':days===0?'TODAY':'Past';
+    return `<div class="exam-card">
+      <div class="exam-card-info">
+        <div class="exam-card-name">${e.name}</div>
+        <div class="exam-card-date">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
       </div>
-      <div style="text-align:right">
-        <div class="exam-days" style="color:${colour}">${days>0?days:days===0?'Today!':'Past'}</div>
-        <div class="exam-days-label">${days>0?'days left':''}</div>
-        <button onclick="deleteExam(${e.id})" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:3px">remove</button>
+      <div class="exam-card-days">
+        <div class="exam-card-num" style="color:${colour}">${label}</div>
+        <div class="exam-card-lbl">${days>0?'days left':''}</div>
       </div>
+      <button class="exam-card-del" onclick="deleteExam(${e.id})" title="Remove">✕</button>
     </div>`;
   }).join('');
 }
@@ -1812,77 +1989,125 @@ function renderExams() {
 function deleteExam(id) {
   const exams = JSON.parse(localStorage.getItem('exams')||'[]').filter(e=>e.id!==id);
   localStorage.setItem('exams', JSON.stringify(exams));
-  renderExams();
+  renderExamsMain();
 }
 
 // Timetable
 function generateTimetable() {
   const stats = getStats();
   const ss = stats.subjectStats||{};
-  const subjects = Object.keys(ss).length>0 ? Object.keys(ss) : [subject];
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const sessionsPerDay = parseInt(document.getElementById('daily-goal-select')?.value||'3');
+  const sessionLen = document.getElementById('session-len-select')?.value||'45';
+
+  // Build subject list - prioritise subjects with exams, then studied subjects, then current subject
+  let subjects = [];
+  exams.forEach(e => { if (!subjects.includes(e.name.split(' ')[0])) subjects.push(e.name); });
+  Object.keys(ss).forEach(s => { if (!subjects.includes(s)) subjects.push(s); });
+  if (!subjects.length) subjects = [subject];
+
   const timetable = [];
   const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  const today = new Date();
-  today.setDate(today.getDate()-(today.getDay()||7)+1); // Start from Monday
+  const startDay = new Date();
+  startDay.setDate(startDay.getDate()-(startDay.getDay()||7)+1);
+
+  const times_weekday = ['4:00 PM','5:30 PM','7:00 PM','8:30 PM','3:30 PM'];
+  const times_weekend = ['10:00 AM','12:00 PM','2:00 PM','4:00 PM','6:00 PM'];
 
   for(let i=0;i<7;i++){
-    const d = new Date(today); d.setDate(today.getDate()+i);
-    const daySubjects = [];
-    const sessionsPerDay = i<5 ? 2 : 3; // More on weekends
-    for(let j=0;j<sessionsPerDay;j++){
-      daySubjects.push({
-        subject: subjects[(i*sessionsPerDay+j)%subjects.length],
-        time: i<5?(j===0?'4:00 PM':'6:00 PM'):(j===0?'10:00 AM':j===1?'2:00 PM':'5:00 PM'),
-        duration: '45 min',
-        done: false,
-        id: `${d.toISOString().split('T')[0]}-${j}`
+    const d = new Date(startDay); d.setDate(startDay.getDate()+i);
+    const isWeekend = i>=5;
+    const dayTimes = isWeekend ? times_weekend : times_weekday;
+    const daySessionCount = isWeekend ? Math.min(sessionsPerDay+1, 4) : sessionsPerDay;
+    const sessions = [];
+
+    for(let j=0;j<daySessionCount;j++){
+      // Prioritise subjects with upcoming exams
+      const upcomingExamSubjects = exams
+        .filter(e=>getExamDays(e.date)>0&&getExamDays(e.date)<=21)
+        .map(e=>e.name);
+      let chosenSubject;
+      if(upcomingExamSubjects.length && j===0) {
+        chosenSubject = upcomingExamSubjects[(i)%upcomingExamSubjects.length];
+      } else {
+        chosenSubject = subjects[(i*daySessionCount+j)%subjects.length];
+      }
+      sessions.push({
+        subject: chosenSubject,
+        time: dayTimes[j]||dayTimes[dayTimes.length-1],
+        duration: sessionLen+' min',
+        id: d.toISOString().split('T')[0]+'-'+j
       });
     }
-    timetable.push({date: d.toISOString().split('T')[0], dayName: days[i], sessions: daySubjects});
+    timetable.push({date:d.toISOString().split('T')[0], dayName:days[i], sessions});
   }
 
   localStorage.setItem('timetable', JSON.stringify(timetable));
-  renderTimetable();
-  toast('✓ Timetable generated!','success');
+  renderTimetableMain();
+  toast('✓ Your personalised timetable is ready!','success');
 }
 
-function renderTimetable() {
+function renderTimetableMain() {
   const timetable = JSON.parse(localStorage.getItem('timetable')||'[]');
   const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
-  const wrap = document.getElementById('timetable-wrap');
-  if(!timetable.length){wrap.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Click Auto-Generate to create a personalised revision plan</div>';return;}
+  const output = document.getElementById('tt-week-output');
+  const container = document.getElementById('tt-days-container');
+  if (!output||!container) return;
+
+  if(!timetable.length){ output.style.display='none'; return; }
+  output.style.display='block';
+
   const today=new Date().toISOString().split('T')[0];
-  wrap.innerHTML=timetable.map(day=>`
-    <div class="timetable-day">
-      <div class="tt-day-header">
-        <div class="tt-day-name">${day.dayName}${day.date===today?' — Today':''}</div>
-        <div class="tt-day-date">${new Date(day.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+  container.innerHTML=timetable.map(day=>{
+    const dayCompleted = day.sessions.filter(s=>completed.includes(s.id)).length;
+    const dayTotal = day.sessions.length;
+    const pct = dayTotal>0?Math.round(dayCompleted/dayTotal*100):0;
+    const isToday = day.date===today;
+    return `<div class="tt-day-card">
+      <div class="tt-day-hd">
+        <div class="tt-day-hd-name">
+          ${day.dayName}
+          ${isToday?'<span class="tt-today-pill">TODAY</span>':''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:11px;color:var(--muted)">${dayCompleted}/${dayTotal} done</div>
+          <div class="tt-day-hd-date">${new Date(day.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+        </div>
       </div>
-      ${day.sessions.length===0?'<div class="tt-empty">Rest day 🎉</div>':day.sessions.map(s=>`
-        <div class="tt-session${completed.includes(s.id)?' done':''}">
-          <div class="tt-check${completed.includes(s.id)?' checked':''}" onclick="toggleTT('${s.id}')">
+      <div class="tt-progress-bar"><div class="tt-progress-fill" style="width:${pct}%"></div></div>
+      ${day.sessions.map(s=>`
+        <div class="tt-session-row${completed.includes(s.id)?' completed':''}">
+          <div class="tt-chk${completed.includes(s.id)?' done':''}" onclick="toggleTT('${s.id}')">
             ${completed.includes(s.id)?'✓':''}
           </div>
-          <div class="tt-subj">${s.subject}</div>
-          <div class="tt-time">${s.time} · ${s.duration}</div>
+          <div class="tt-sess-subj">${s.subject}</div>
+          <div class="tt-sess-meta">
+            <div>${s.time}</div>
+            <div class="tt-sess-time">${s.duration}</div>
+          </div>
         </div>`).join('')}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function toggleTT(id) {
   const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
   const idx = completed.indexOf(id);
-  if(idx>=0) completed.splice(idx,1); else completed.push(id);
+  if(idx>=0) completed.splice(idx,1); else { completed.push(id); trackSession('timetable',{}); }
   localStorage.setItem('tt_completed', JSON.stringify(completed));
-  renderTimetable();
-  if(idx<0) { trackSession('timetable',{}); }
+  renderTimetableMain();
 }
 
 // Initialise stats on load
 function initStats() {
   const stats = getStats();
-  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
-  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
+  const el1 = document.getElementById('stat-streak');
+  const el2 = document.getElementById('stat-total-gen');
+  if(el1) el1.textContent = '🔥 '+(stats.streak||0);
+  if(el2) el2.textContent = stats.totalSessions||0;
+  // Set daily goal select
+  const goalSel = document.getElementById('daily-goal-select');
+  if(goalSel) goalSel.value = localStorage.getItem('daily_goal')||'3';
 }
 
 // ─── MOBILE NAV ──────────────────────────────────────────────────────────────
