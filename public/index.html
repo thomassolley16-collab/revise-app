@@ -254,6 +254,94 @@ textarea:focus{outline:none;border-color:var(--accent)}
 .fade-in{animation:fi .3s ease}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
+/* COUNT SELECTOR */
+.count-selector{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.count-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.count-btns{display:flex;gap:4px}
+.cbtn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
+.cbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cbtn:hover:not(.active){border-color:var(--border2);color:var(--text)}
+
+/* PROGRESS DASHBOARD */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px}
+.prog-card.wide{grid-column:span 2}
+.prog-val{font-size:26px;font-family:var(--fd);font-weight:400;color:var(--text)}
+.prog-label{font-size:11px;color:var(--muted);margin-top:2px}
+.prog-change{font-size:11px;color:var(--green);margin-top:2px}
+.streak-fire{font-size:24px;margin-bottom:4px}
+
+/* STREAK */
+.streak-row{display:flex;gap:4px;margin-top:8px}
+.streak-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.streak-day.done{background:rgba(124,92,252,.2);color:var(--accent)}
+.streak-day.today{background:var(--accent);color:#fff}
+.streak-day.missed{background:var(--surface2);color:var(--muted)}
+
+/* BADGES */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px}
+.badge-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;transition:all .2s}
+.badge-item.earned{background:rgba(124,92,252,.1);border-color:rgba(124,92,252,.3)}
+.badge-item.locked{opacity:.4}
+.badge-icon{font-size:22px;margin-bottom:4px}
+.badge-name{font-size:10px;color:var(--muted);line-height:1.3}
+.badge-item.earned .badge-name{color:var(--text)}
+
+/* PROGRESS CHART */
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:50px;margin-top:8px}
+.chart-bar{flex:1;border-radius:3px 3px 0 0;background:var(--accent);opacity:.3;min-height:4px;transition:all .3s}
+.chart-bar.active{opacity:1}
+.chart-labels{display:flex;gap:3px;margin-top:3px}
+.chart-label{flex:1;font-size:9px;color:var(--muted);text-align:center}
+
+/* EXAM COUNTDOWN */
+.exam-list{display:flex;flex-direction:column;gap:6px}
+.exam-item{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between}
+.exam-name{font-size:13px;font-weight:500}
+.exam-meta{font-size:11px;color:var(--muted)}
+.exam-days{font-size:18px;font-family:var(--fd);color:var(--accent);text-align:right;flex-shrink:0}
+.exam-days-label{font-size:10px;color:var(--muted);text-align:right}
+.exam-add{display:flex;gap:6px;margin-bottom:8px}
+.exam-add input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--ff);font-size:12px}
+.exam-add input:focus{outline:none;border-color:var(--accent)}
+.exam-add button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:var(--ff);font-size:12px;cursor:pointer;white-space:nowrap}
+
+/* DAILY GOAL */
+.goal-ring-wrap{display:flex;align-items:center;gap:14px}
+.goal-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.goal-ring svg{transform:rotate(-90deg)}
+.goal-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.goal-ring-pct{font-size:15px;font-weight:700;color:var(--text)}
+.goal-ring-sub{font-size:8px;color:var(--muted)}
+.goal-info{flex:1}
+.goal-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.goal-sub{font-size:11px;color:var(--muted)}
+
+/* SUBJECT PROGRESS BARS */
+.subj-prog-list{display:flex;flex-direction:column;gap:8px}
+.subj-prog-row{display:flex;flex-direction:column;gap:3px}
+.subj-prog-top{display:flex;justify-content:space-between;font-size:12px}
+.subj-prog-name{color:var(--text);font-weight:500}
+.subj-prog-pct{color:var(--muted)}
+.subj-prog-bg{height:5px;background:var(--surface2);border-radius:3px}
+.subj-prog-fill{height:5px;border-radius:3px;background:var(--accent);transition:width .6s ease}
+
+/* TIMETABLE */
+.timetable-day{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden}
+.tt-day-header{padding:9px 13px;background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.tt-day-name{font-size:13px;font-weight:600}
+.tt-day-date{font-size:11px;color:var(--muted)}
+.tt-session{padding:9px 13px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.tt-session.done{opacity:.5}
+.tt-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.tt-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.tt-subj{font-size:13px;font-weight:500;flex:1}
+.tt-time{font-size:11px;color:var(--muted);white-space:nowrap}
+.tt-empty{padding:12px 13px;font-size:13px;color:var(--muted);text-align:center}
+
+/* NOTIFICATION */
+.notif-badge{position:absolute;top:-4px;right:-4px;width:8px;height:8px;background:var(--red);border-radius:50%}
+
 /* BOTTOM NAV */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border2);padding:.4rem 0 calc(.4rem + env(safe-area-inset-bottom));z-index:200;justify-content:space-around;align-items:center}
 .bnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:5px 8px;color:var(--muted);font-family:var(--ff);font-size:10px;font-weight:500;border-radius:10px;transition:all .15s;min-width:52px}
@@ -335,6 +423,9 @@ textarea:focus{outline:none;border-color:var(--accent)}
   </button>
   <button class="bnav-btn" id="bnav-saved" onclick="mobileTab('saved')">
     <span class="bicon">💾</span>Saved
+  </button>
+  <button class="bnav-btn" id="bnav-progress" onclick="mobileTab('progress')">
+    <span class="bicon">📊</span>Progress
   </button>
   <button class="bnav-btn" id="bnav-account" onclick="mobileTab('account')">
     <span class="bicon">👤</span>Account
@@ -456,6 +547,113 @@ textarea:focus{outline:none;border-color:var(--accent)}
 </div>
 </div>
 
+<!-- PROGRESS MODAL -->
+<div class="overlay hidden" id="m-progress">
+<div class="modal" style="max-width:560px">
+  <button class="mclose" onclick="closeM('m-progress')">✕</button>
+  <h2>Your Progress</h2>
+  <p>Track your revision journey and stay on target</p>
+
+  <!-- DAILY GOAL RING -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Today's Goal</div>
+    <div class="goal-ring-wrap">
+      <div class="goal-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="6"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="6"
+            stroke-dasharray="163" id="goal-ring-circle" stroke-dashoffset="163" stroke-linecap="round"/>
+        </svg>
+        <div class="goal-ring-text">
+          <div class="goal-ring-pct" id="goal-ring-pct">0%</div>
+          <div class="goal-ring-sub">done</div>
+        </div>
+      </div>
+      <div class="goal-info">
+        <div class="goal-title" id="goal-title">Complete 3 revision sessions today</div>
+        <div class="goal-sub" id="goal-sub">0 of 3 done · <span style="color:var(--accent);cursor:pointer" onclick="showGoalSettings()">Change goal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="streak-fire">🔥</div>
+      <div class="prog-val" id="prog-streak">0</div>
+      <div class="prog-label">Day Streak</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">📚</div>
+      <div class="prog-val" id="prog-total">0</div>
+      <div class="prog-label">Total Sessions</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">🃏</div>
+      <div class="prog-val" id="prog-cards">0</div>
+      <div class="prog-label">Cards Created</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">🎯</div>
+      <div class="prog-val" id="prog-quiz">0</div>
+      <div class="prog-label">Questions Answered</div>
+    </div>
+  </div>
+
+  <!-- WEEKLY ACTIVITY -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">This Week</div>
+    <div class="mini-chart" id="weekly-chart"></div>
+    <div class="chart-labels" id="weekly-labels"></div>
+  </div>
+
+  <!-- STREAK CALENDAR -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Last 7 Days</div>
+    <div class="streak-row" id="streak-row"></div>
+  </div>
+
+  <!-- SUBJECT PROGRESS -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Subject Breakdown</div>
+    <div class="subj-prog-list" id="subj-prog-list">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate some flashcards to see subject progress</div>
+    </div>
+  </div>
+
+  <!-- EXAM COUNTDOWN -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Exam Countdowns</div>
+    <div class="exam-add">
+      <input type="text" id="exam-name-input" placeholder="Exam name e.g. Biology Paper 1">
+      <input type="date" id="exam-date-input" style="width:130px">
+      <button onclick="addExam()">+ Add</button>
+    </div>
+    <div class="exam-list" id="exam-list">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">No exams added yet</div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Achievement Badges</div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+
+  <!-- REVISION TIMETABLE -->
+  <div class="prog-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Revision Timetable</div>
+      <button onclick="generateTimetable()" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 11px;font-family:var(--ff);font-size:11px;cursor:pointer">Auto-Generate</button>
+    </div>
+    <div id="timetable-wrap">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Click Auto-Generate to create a personalised revision plan</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
 <!-- NAV -->
 <nav class="topnav">
   <div class="logo"><span class="logo-dot"></span>Revise AI</div>
@@ -528,6 +726,11 @@ textarea:focus{outline:none;border-color:var(--accent)}
         <div class="scard"><div class="scard-val" id="stat-cards">0</div><div class="scard-label">Cards made</div></div>
         <div class="scard"><div class="scard-val" id="stat-quiz">0</div><div class="scard-label">Questions done</div></div>
       </div>
+      <div class="stats-row" style="margin-top:6px">
+        <div class="scard" style="cursor:pointer" onclick="openProgress()"><div class="scard-val" id="stat-streak">🔥 0</div><div class="scard-label">Day streak</div></div>
+        <div class="scard" style="cursor:pointer" onclick="openProgress()"><div class="scard-val" id="stat-total-gen">0</div><div class="scard-label">Total sessions</div></div>
+      </div>
+      <button onclick="openProgress()" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;margin-top:4px" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📊 View Full Progress Dashboard</button>
     </div>
   </aside>
 
@@ -557,8 +760,19 @@ textarea:focus{outline:none;border-color:var(--accent)}
         <span class="chip" onclick="loadSample('psych')">Memory Models</span>
         <span class="chip" onclick="loadSample('econ')">Supply & Demand</span>
       </div>
+      <div class="count-selector" id="count-selector">
+        <span class="count-label" id="count-label">Flashcards:</span>
+        <div class="count-btns" id="count-btns">
+          <button class="cbtn" onclick="setCount(4,this)">4</button>
+          <button class="cbtn active" onclick="setCount(6,this)">6</button>
+          <button class="cbtn" onclick="setCount(8,this)">8</button>
+          <button class="cbtn" onclick="setCount(10,this)">10</button>
+          <button class="cbtn" onclick="setCount(12,this)">12</button>
+        </div>
+      </div>
       <div class="action-row">
         <button class="gen-btn" id="gen-btn" onclick="generate()"><span id="gen-txt">✦ Generate</span></button>
+        <button class="gen-btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)" onclick="openProgress()">📊 Progress</button>
         <span class="ccount" id="ccount">0 characters</span>
       </div>
     </div>
@@ -697,6 +911,26 @@ function setLevel(l,btn) {
 function setMode(m,btn) {
   mode=m;
   document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCountSelector();
+}
+function updateCountSelector() {
+  const cs = document.getElementById('count-selector');
+  const lbl = document.getElementById('count-label');
+  if (!cs) return;
+  if (mode==='flashcards') {
+    cs.style.display='flex'; lbl.textContent='Number of cards:';
+    window.selectedCount = window.selectedCount || 6;
+  } else if (mode==='quiz') {
+    cs.style.display='flex'; lbl.textContent='Number of questions:';
+    window.selectedCount = window.selectedCount || 4;
+  } else {
+    cs.style.display='none';
+  }
+}
+function setCount(n, btn) {
+  window.selectedCount = n;
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
 function handleProMode(m,btn) {
@@ -1158,32 +1392,41 @@ async function generate() {
   const lc=`${examBoard} ${level}`;
   const gs=level==='GCSE'?'GCSE grades 9-1':'A-Level grades A*,A,B,C,D,E';
 
+  const cardCount = window.selectedCount || 6;
+  const quizCount = window.selectedCount || 4;
+
   const PROMPTS={
-    flashcards:`You are an expert ${subject} teacher for ${lc}. Generate exactly 6 flashcards as a JSON array. Each object: {"question":"...","answer":"..."}. Pitch for ${level}. Return ONLY a valid JSON array with no markdown, no explanation.
+    flashcards:`You are an expert ${subject} teacher for ${lc}. Generate exactly ${cardCount} flashcards as a JSON array. Each object: {"question":"...","answer":"..."}. Pitch difficulty correctly for ${level}. Return ONLY a valid JSON array with no markdown, no explanation.
 
 Notes:
 ${notes}`,
-    quiz:`You are an expert ${subject} teacher for ${lc}. Generate exactly 4 multiple choice questions as a JSON array. Each: {"question":"...","options":["A","B","C","D"],"correct":0,"explanation":"..."}. Exam-style for ${level}. Return ONLY valid JSON array, no markdown.
+    quiz:`You are an expert ${subject} teacher for ${lc}. Generate exactly ${quizCount} multiple choice questions as a JSON array. Each: {"question":"...","options":["A","B","C","D"],"correct":0,"explanation":"..."}. Make them genuine exam-style questions for ${level}. Return ONLY valid JSON array, no markdown.
 
 Notes:
 ${notes}`,
-    essay:`You are a senior ${subject} examiner for ${lc} with 20 years experience marking exam scripts. Carefully read the student answer below and provide detailed, accurate feedback as if marking a real exam paper.
+    essay:`You are a senior ${subject} examiner for ${lc} with 20 years marking experience.
 
-You must return ONLY valid JSON in this exact format, no markdown:
+FIRST check: is the text below actually an essay or extended answer? If it is NOT an essay (e.g. bullet points, short notes, a list, a summary, random sentences), return: {"notAnEssay":true,"message":"This does not appear to be an essay answer. Please paste a proper written response to an exam question for feedback."}
+
+If it IS an essay or extended answer, evaluate it strictly and return ONLY valid JSON:
 {"grade":"...","overall":"...","strengths":"...","improvements":"...","examinerComment":"...","markSchemePoints":["...","...","..."],"scores":{"knowledge":7,"analysis":6,"evaluation":6,"communication":7}}
 
-Rules:
-- grade: use ${gs} — be accurate and strict, not generous
-- overall: 3-4 sentences summarising the answer quality honestly
-- strengths: specific things done well with examples from the answer
-- improvements: precise, actionable advice referencing ${lc} mark scheme expectations
-- examinerComment: what a real examiner would write on the script
-- markSchemePoints: list 3-5 key points from the mark scheme this answer did or did not hit
-- scores: mark each out of 10 honestly — do not round up to be kind
+Grading rules — be strict and accurate:
+- Use ${gs}
+- A/9/8: Exceptional — detailed, accurate, well-structured with strong analysis
+- B/7/6: Good — mostly accurate, some analysis, minor gaps
+- C/5/4: Average — basic understanding, limited analysis, significant gaps
+- D-E/3-1: Below average — major inaccuracies or very limited response
+- Do NOT give high grades for vague or short answers
+- overall: 3-4 honest sentences on quality
+- strengths: quote specific things from the answer that are good
+- improvements: specific, actionable advice tied to ${lc} mark scheme
+- examinerComment: exactly what an examiner would write on the paper
+- markSchemePoints: 3-5 bullet points from the mark scheme — tick or cross each
 
 Student answer:
 ${notes}`,
-    summary:`You are an expert ${subject} teacher for ${lc}. Create revision notes. Return ONLY valid JSON: {"title":"...","keyPoints":["...","..."],"keyTerms":[{"term":"...","definition":"..."}],"examTip":"..."}.
+    summary:`You are an expert ${subject} teacher for ${lc}. Create concise revision notes. Return ONLY valid JSON: {"title":"...","keyPoints":["...","..."],"keyTerms":[{"term":"...","definition":"..."}],"examTip":"..."}.
 
 Notes:
 ${notes}`
@@ -1208,6 +1451,8 @@ ${notes}`
       if (sb&&currentUser) sb.from('profiles').update({free_generates_used:freeUsed}).eq('id',currentUser.id).then(()=>{});
     }
     refreshUI();
+    // Track usage stats
+    trackSession(mode, parsed);
     renderResults(parsed);
   } catch(e) {
     document.getElementById('results').innerHTML=`<div class="lwrap"><p style="color:var(--red)">Error: ${e.message||'Something went wrong'}. Please try again.</p></div>`;
@@ -1333,6 +1578,311 @@ function toast(msg,type='success'){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className=`toast ${type} show`;
   clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ─── PROGRESS & STATS ────────────────────────────────────────────────────────
+const BADGES = [
+  {id:'first_session',icon:'🌱',name:'First Steps',desc:'Complete your first session',check:s=>s.totalSessions>=1},
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'3 day streak',check:s=>s.streak>=3},
+  {id:'streak_7',icon:'⚡',name:'Week Warrior',desc:'7 day streak',check:s=>s.streak>=7},
+  {id:'cards_50',icon:'🃏',name:'Card Shark',desc:'Create 50 flashcards',check:s=>s.totalCards>=50},
+  {id:'cards_100',icon:'💎',name:'Card Master',desc:'Create 100 flashcards',check:s=>s.totalCards>=100},
+  {id:'quiz_10',icon:'🎯',name:'Quiz Whiz',desc:'Answer 10 questions',check:s=>s.totalQuiz>=10},
+  {id:'quiz_50',icon:'🏆',name:'Quiz Champion',desc:'Answer 50 questions',check:s=>s.totalQuiz>=50},
+  {id:'subjects_3',icon:'📚',name:'Multi-Subject',desc:'Study 3 different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=3},
+  {id:'essay_1',icon:'✍️',name:'Essay Pro',desc:'Get essay feedback',check:s=>s.totalEssays>=1},
+  {id:'sessions_10',icon:'🎓',name:'Dedicated',desc:'Complete 10 sessions',check:s=>s.totalSessions>=10},
+];
+
+function getStats() {
+  try {
+    return JSON.parse(localStorage.getItem('revise_stats') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveStats(stats) {
+  localStorage.setItem('revise_stats', JSON.stringify(stats));
+}
+
+function trackSession(mode, data) {
+  const stats = getStats();
+  const today = new Date().toISOString().split('T')[0];
+
+  stats.totalSessions = (stats.totalSessions || 0) + 1;
+  stats.totalCards = (stats.totalCards || 0) + (mode==='flashcards' ? (data.length||0) : 0);
+  stats.totalQuiz = (stats.totalQuiz || 0) + (mode==='quiz' ? (data.length||0) : 0);
+  stats.totalEssays = (stats.totalEssays || 0) + (mode==='essay' && !data.notAnEssay ? 1 : 0);
+
+  // Track subject stats
+  if (!stats.subjectStats) stats.subjectStats = {};
+  if (!stats.subjectStats[subject]) stats.subjectStats[subject] = 0;
+  stats.subjectStats[subject]++;
+
+  // Track daily activity
+  if (!stats.dailyActivity) stats.dailyActivity = {};
+  stats.dailyActivity[today] = (stats.dailyActivity[today] || 0) + 1;
+
+  // Daily goal progress
+  stats.todaySessions = stats.lastDate===today ? (stats.todaySessions||0)+1 : 1;
+  stats.lastDate = today;
+
+  // Streak calculation
+  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
+  if (stats.lastActiveDate===yesterday || stats.lastActiveDate===today) {
+    if (stats.lastActiveDate!==today) stats.streak = (stats.streak||0)+1;
+  } else if (stats.lastActiveDate && stats.lastActiveDate!==today) {
+    stats.streak = 1;
+  } else {
+    stats.streak = (stats.streak||0) + (stats.lastActiveDate===today?0:1);
+  }
+  stats.lastActiveDate = today;
+
+  // Weekly chart data
+  if (!stats.weeklyData) stats.weeklyData = {};
+  stats.weeklyData[today] = (stats.weeklyData[today]||0)+1;
+
+  saveStats(stats);
+
+  // Update sidebar stats
+  document.getElementById('stat-cards').textContent = statCards;
+  document.getElementById('stat-quiz').textContent = statQuiz;
+  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
+
+  // Check for new badges
+  checkBadges(stats);
+}
+
+function checkBadges(stats) {
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  BADGES.forEach(b => {
+    if (!earned.includes(b.id) && b.check(stats)) {
+      earned.push(b.id);
+      localStorage.setItem('earned_badges', JSON.stringify(earned));
+      toast('🏆 Badge earned: '+b.name+'!', 'success');
+    }
+  });
+}
+
+function openProgress() {
+  const stats = getStats();
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+
+  // Update stats
+  document.getElementById('prog-streak').textContent = stats.streak||0;
+  document.getElementById('prog-total').textContent = stats.totalSessions||0;
+  document.getElementById('prog-cards').textContent = stats.totalCards||0;
+  document.getElementById('prog-quiz').textContent = stats.totalQuiz||0;
+
+  // Daily goal ring
+  const dailyGoal = parseInt(localStorage.getItem('daily_goal')||'3');
+  const todayDone = stats.todaySessions||0;
+  const pct = Math.min(100, Math.round(todayDone/dailyGoal*100));
+  const circumference = 163;
+  const offset = circumference - (pct/100)*circumference;
+  document.getElementById('goal-ring-circle').style.strokeDashoffset = offset;
+  document.getElementById('goal-ring-pct').textContent = pct+'%';
+  document.getElementById('goal-title').textContent = `Complete ${dailyGoal} revision sessions today`;
+  document.getElementById('goal-sub').innerHTML = `${todayDone} of ${dailyGoal} done · <span style="color:var(--accent);cursor:pointer" onclick="changeGoal()">Change goal</span>`;
+
+  // Weekly chart
+  const chart = document.getElementById('weekly-chart');
+  const labels = document.getElementById('weekly-labels');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  chart.innerHTML=''; labels.innerHTML='';
+  const maxVal = Math.max(1,...Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    return (stats.weeklyData||{})[key]||0;
+  }));
+  Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const val=(stats.weeklyData||{})[key]||0;
+    const isToday=key===today.toISOString().split('T')[0];
+    const bar=document.createElement('div');
+    bar.className='chart-bar'+(isToday?' active':'');
+    bar.style.height=Math.max(4,Math.round((val/maxVal)*50))+'px';
+    bar.title=val+' sessions';
+    if(isToday) bar.style.opacity='1';
+    chart.appendChild(bar);
+    const lbl=document.createElement('div');
+    lbl.className='chart-label';
+    lbl.textContent=days[d.getDay()];
+    labels.appendChild(lbl);
+  });
+
+  // Streak calendar
+  const streakRow = document.getElementById('streak-row');
+  streakRow.innerHTML='';
+  Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const todayKey=today.toISOString().split('T')[0];
+    const val=(stats.weeklyData||{})[key]||0;
+    const div=document.createElement('div');
+    const isToday=key===todayKey;
+    div.className='streak-day '+(isToday?'today':val>0?'done':'missed');
+    div.textContent=days[d.getDay()][0];
+    div.title=days[d.getDay()]+': '+(val>0?val+' sessions':'No activity');
+    streakRow.appendChild(div);
+  });
+
+  // Subject progress
+  const subjList=document.getElementById('subj-prog-list');
+  const ss=stats.subjectStats||{};
+  if(Object.keys(ss).length===0){
+    subjList.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate some flashcards to see subject progress</div>';
+  } else {
+    const max=Math.max(...Object.values(ss));
+    subjList.innerHTML=Object.entries(ss).sort((a,b)=>b[1]-a[1]).map(([subj,count])=>`
+      <div class="subj-prog-row">
+        <div class="subj-prog-top">
+          <span class="subj-prog-name">${subj}</span>
+          <span class="subj-prog-pct">${count} session${count>1?'s':''}</span>
+        </div>
+        <div class="subj-prog-bg"><div class="subj-prog-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+      </div>`).join('');
+  }
+
+  // Exam countdowns
+  renderExams();
+
+  // Badges
+  const badgesGrid=document.getElementById('badges-grid');
+  badgesGrid.innerHTML=BADGES.map(b=>`
+    <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" title="${b.desc}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`).join('');
+
+  // Timetable
+  renderTimetable();
+
+  openM('m-progress');
+}
+
+function changeGoal() {
+  const current = localStorage.getItem('daily_goal')||'3';
+  const val = prompt('Set your daily goal (sessions per day):', current);
+  if (val && !isNaN(val) && parseInt(val)>0) {
+    localStorage.setItem('daily_goal', parseInt(val));
+    openProgress();
+  }
+}
+
+// Exams
+function addExam() {
+  const name = document.getElementById('exam-name-input').value.trim();
+  const date = document.getElementById('exam-date-input').value;
+  if (!name||!date) { toast('Please enter exam name and date','error'); return; }
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  exams.push({name, date, id: Date.now()});
+  exams.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  localStorage.setItem('exams', JSON.stringify(exams));
+  document.getElementById('exam-name-input').value='';
+  document.getElementById('exam-date-input').value='';
+  renderExams();
+}
+
+function renderExams() {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const list = document.getElementById('exam-list');
+  if (!exams.length) { list.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">No exams added yet</div>'; return; }
+  const now = new Date(); now.setHours(0,0,0,0);
+  list.innerHTML = exams.map(e=>{
+    const examDate = new Date(e.date); examDate.setHours(0,0,0,0);
+    const days = Math.round((examDate-now)/(1000*60*60*24));
+    const colour = days<=7?'var(--red)':days<=14?'var(--amber)':'var(--green)';
+    return `<div class="exam-item">
+      <div>
+        <div class="exam-name">${e.name}</div>
+        <div class="exam-meta">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="exam-days" style="color:${colour}">${days>0?days:days===0?'Today!':'Past'}</div>
+        <div class="exam-days-label">${days>0?'days left':''}</div>
+        <button onclick="deleteExam(${e.id})" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:3px">remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteExam(id) {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]').filter(e=>e.id!==id);
+  localStorage.setItem('exams', JSON.stringify(exams));
+  renderExams();
+}
+
+// Timetable
+function generateTimetable() {
+  const stats = getStats();
+  const ss = stats.subjectStats||{};
+  const subjects = Object.keys(ss).length>0 ? Object.keys(ss) : [subject];
+  const timetable = [];
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const today = new Date();
+  today.setDate(today.getDate()-(today.getDay()||7)+1); // Start from Monday
+
+  for(let i=0;i<7;i++){
+    const d = new Date(today); d.setDate(today.getDate()+i);
+    const daySubjects = [];
+    const sessionsPerDay = i<5 ? 2 : 3; // More on weekends
+    for(let j=0;j<sessionsPerDay;j++){
+      daySubjects.push({
+        subject: subjects[(i*sessionsPerDay+j)%subjects.length],
+        time: i<5?(j===0?'4:00 PM':'6:00 PM'):(j===0?'10:00 AM':j===1?'2:00 PM':'5:00 PM'),
+        duration: '45 min',
+        done: false,
+        id: `${d.toISOString().split('T')[0]}-${j}`
+      });
+    }
+    timetable.push({date: d.toISOString().split('T')[0], dayName: days[i], sessions: daySubjects});
+  }
+
+  localStorage.setItem('timetable', JSON.stringify(timetable));
+  renderTimetable();
+  toast('✓ Timetable generated!','success');
+}
+
+function renderTimetable() {
+  const timetable = JSON.parse(localStorage.getItem('timetable')||'[]');
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const wrap = document.getElementById('timetable-wrap');
+  if(!timetable.length){wrap.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Click Auto-Generate to create a personalised revision plan</div>';return;}
+  const today=new Date().toISOString().split('T')[0];
+  wrap.innerHTML=timetable.map(day=>`
+    <div class="timetable-day">
+      <div class="tt-day-header">
+        <div class="tt-day-name">${day.dayName}${day.date===today?' — Today':''}</div>
+        <div class="tt-day-date">${new Date(day.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+      </div>
+      ${day.sessions.length===0?'<div class="tt-empty">Rest day 🎉</div>':day.sessions.map(s=>`
+        <div class="tt-session${completed.includes(s.id)?' done':''}">
+          <div class="tt-check${completed.includes(s.id)?' checked':''}" onclick="toggleTT('${s.id}')">
+            ${completed.includes(s.id)?'✓':''}
+          </div>
+          <div class="tt-subj">${s.subject}</div>
+          <div class="tt-time">${s.time} · ${s.duration}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function toggleTT(id) {
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const idx = completed.indexOf(id);
+  if(idx>=0) completed.splice(idx,1); else completed.push(id);
+  localStorage.setItem('tt_completed', JSON.stringify(completed));
+  renderTimetable();
+  if(idx<0) { trackSession('timetable',{}); }
+}
+
+// Initialise stats on load
+function initStats() {
+  const stats = getStats();
+  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
 }
 
 // ─── MOBILE NAV ──────────────────────────────────────────────────────────────
@@ -1485,6 +2035,8 @@ window.addEventListener('load', ()=>{
   initPDF();
   renderSubjs();
   refreshUI();
+  initStats();
+  updateCountSelector();
   // Set theme toggle
   const t=localStorage.getItem('theme')||'dark';
   const tog=document.getElementById('dark-tog');
@@ -1492,6 +2044,311 @@ window.addEventListener('load', ()=>{
   // Check if returning from Stripe redirect
   checkReturnPayment();
 });
+
+// ─── PROGRESS & STATS ────────────────────────────────────────────────────────
+const BADGES = [
+  {id:'first_session',icon:'🌱',name:'First Steps',desc:'Complete your first session',check:s=>s.totalSessions>=1},
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'3 day streak',check:s=>s.streak>=3},
+  {id:'streak_7',icon:'⚡',name:'Week Warrior',desc:'7 day streak',check:s=>s.streak>=7},
+  {id:'cards_50',icon:'🃏',name:'Card Shark',desc:'Create 50 flashcards',check:s=>s.totalCards>=50},
+  {id:'cards_100',icon:'💎',name:'Card Master',desc:'Create 100 flashcards',check:s=>s.totalCards>=100},
+  {id:'quiz_10',icon:'🎯',name:'Quiz Whiz',desc:'Answer 10 questions',check:s=>s.totalQuiz>=10},
+  {id:'quiz_50',icon:'🏆',name:'Quiz Champion',desc:'Answer 50 questions',check:s=>s.totalQuiz>=50},
+  {id:'subjects_3',icon:'📚',name:'Multi-Subject',desc:'Study 3 different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=3},
+  {id:'essay_1',icon:'✍️',name:'Essay Pro',desc:'Get essay feedback',check:s=>s.totalEssays>=1},
+  {id:'sessions_10',icon:'🎓',name:'Dedicated',desc:'Complete 10 sessions',check:s=>s.totalSessions>=10},
+];
+
+function getStats() {
+  try {
+    return JSON.parse(localStorage.getItem('revise_stats') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveStats(stats) {
+  localStorage.setItem('revise_stats', JSON.stringify(stats));
+}
+
+function trackSession(mode, data) {
+  const stats = getStats();
+  const today = new Date().toISOString().split('T')[0];
+
+  stats.totalSessions = (stats.totalSessions || 0) + 1;
+  stats.totalCards = (stats.totalCards || 0) + (mode==='flashcards' ? (data.length||0) : 0);
+  stats.totalQuiz = (stats.totalQuiz || 0) + (mode==='quiz' ? (data.length||0) : 0);
+  stats.totalEssays = (stats.totalEssays || 0) + (mode==='essay' && !data.notAnEssay ? 1 : 0);
+
+  // Track subject stats
+  if (!stats.subjectStats) stats.subjectStats = {};
+  if (!stats.subjectStats[subject]) stats.subjectStats[subject] = 0;
+  stats.subjectStats[subject]++;
+
+  // Track daily activity
+  if (!stats.dailyActivity) stats.dailyActivity = {};
+  stats.dailyActivity[today] = (stats.dailyActivity[today] || 0) + 1;
+
+  // Daily goal progress
+  stats.todaySessions = stats.lastDate===today ? (stats.todaySessions||0)+1 : 1;
+  stats.lastDate = today;
+
+  // Streak calculation
+  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
+  if (stats.lastActiveDate===yesterday || stats.lastActiveDate===today) {
+    if (stats.lastActiveDate!==today) stats.streak = (stats.streak||0)+1;
+  } else if (stats.lastActiveDate && stats.lastActiveDate!==today) {
+    stats.streak = 1;
+  } else {
+    stats.streak = (stats.streak||0) + (stats.lastActiveDate===today?0:1);
+  }
+  stats.lastActiveDate = today;
+
+  // Weekly chart data
+  if (!stats.weeklyData) stats.weeklyData = {};
+  stats.weeklyData[today] = (stats.weeklyData[today]||0)+1;
+
+  saveStats(stats);
+
+  // Update sidebar stats
+  document.getElementById('stat-cards').textContent = statCards;
+  document.getElementById('stat-quiz').textContent = statQuiz;
+  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
+
+  // Check for new badges
+  checkBadges(stats);
+}
+
+function checkBadges(stats) {
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  BADGES.forEach(b => {
+    if (!earned.includes(b.id) && b.check(stats)) {
+      earned.push(b.id);
+      localStorage.setItem('earned_badges', JSON.stringify(earned));
+      toast('🏆 Badge earned: '+b.name+'!', 'success');
+    }
+  });
+}
+
+function openProgress() {
+  const stats = getStats();
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+
+  // Update stats
+  document.getElementById('prog-streak').textContent = stats.streak||0;
+  document.getElementById('prog-total').textContent = stats.totalSessions||0;
+  document.getElementById('prog-cards').textContent = stats.totalCards||0;
+  document.getElementById('prog-quiz').textContent = stats.totalQuiz||0;
+
+  // Daily goal ring
+  const dailyGoal = parseInt(localStorage.getItem('daily_goal')||'3');
+  const todayDone = stats.todaySessions||0;
+  const pct = Math.min(100, Math.round(todayDone/dailyGoal*100));
+  const circumference = 163;
+  const offset = circumference - (pct/100)*circumference;
+  document.getElementById('goal-ring-circle').style.strokeDashoffset = offset;
+  document.getElementById('goal-ring-pct').textContent = pct+'%';
+  document.getElementById('goal-title').textContent = `Complete ${dailyGoal} revision sessions today`;
+  document.getElementById('goal-sub').innerHTML = `${todayDone} of ${dailyGoal} done · <span style="color:var(--accent);cursor:pointer" onclick="changeGoal()">Change goal</span>`;
+
+  // Weekly chart
+  const chart = document.getElementById('weekly-chart');
+  const labels = document.getElementById('weekly-labels');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  chart.innerHTML=''; labels.innerHTML='';
+  const maxVal = Math.max(1,...Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    return (stats.weeklyData||{})[key]||0;
+  }));
+  Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const val=(stats.weeklyData||{})[key]||0;
+    const isToday=key===today.toISOString().split('T')[0];
+    const bar=document.createElement('div');
+    bar.className='chart-bar'+(isToday?' active':'');
+    bar.style.height=Math.max(4,Math.round((val/maxVal)*50))+'px';
+    bar.title=val+' sessions';
+    if(isToday) bar.style.opacity='1';
+    chart.appendChild(bar);
+    const lbl=document.createElement('div');
+    lbl.className='chart-label';
+    lbl.textContent=days[d.getDay()];
+    labels.appendChild(lbl);
+  });
+
+  // Streak calendar
+  const streakRow = document.getElementById('streak-row');
+  streakRow.innerHTML='';
+  Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const todayKey=today.toISOString().split('T')[0];
+    const val=(stats.weeklyData||{})[key]||0;
+    const div=document.createElement('div');
+    const isToday=key===todayKey;
+    div.className='streak-day '+(isToday?'today':val>0?'done':'missed');
+    div.textContent=days[d.getDay()][0];
+    div.title=days[d.getDay()]+': '+(val>0?val+' sessions':'No activity');
+    streakRow.appendChild(div);
+  });
+
+  // Subject progress
+  const subjList=document.getElementById('subj-prog-list');
+  const ss=stats.subjectStats||{};
+  if(Object.keys(ss).length===0){
+    subjList.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate some flashcards to see subject progress</div>';
+  } else {
+    const max=Math.max(...Object.values(ss));
+    subjList.innerHTML=Object.entries(ss).sort((a,b)=>b[1]-a[1]).map(([subj,count])=>`
+      <div class="subj-prog-row">
+        <div class="subj-prog-top">
+          <span class="subj-prog-name">${subj}</span>
+          <span class="subj-prog-pct">${count} session${count>1?'s':''}</span>
+        </div>
+        <div class="subj-prog-bg"><div class="subj-prog-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+      </div>`).join('');
+  }
+
+  // Exam countdowns
+  renderExams();
+
+  // Badges
+  const badgesGrid=document.getElementById('badges-grid');
+  badgesGrid.innerHTML=BADGES.map(b=>`
+    <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" title="${b.desc}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`).join('');
+
+  // Timetable
+  renderTimetable();
+
+  openM('m-progress');
+}
+
+function changeGoal() {
+  const current = localStorage.getItem('daily_goal')||'3';
+  const val = prompt('Set your daily goal (sessions per day):', current);
+  if (val && !isNaN(val) && parseInt(val)>0) {
+    localStorage.setItem('daily_goal', parseInt(val));
+    openProgress();
+  }
+}
+
+// Exams
+function addExam() {
+  const name = document.getElementById('exam-name-input').value.trim();
+  const date = document.getElementById('exam-date-input').value;
+  if (!name||!date) { toast('Please enter exam name and date','error'); return; }
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  exams.push({name, date, id: Date.now()});
+  exams.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  localStorage.setItem('exams', JSON.stringify(exams));
+  document.getElementById('exam-name-input').value='';
+  document.getElementById('exam-date-input').value='';
+  renderExams();
+}
+
+function renderExams() {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const list = document.getElementById('exam-list');
+  if (!exams.length) { list.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">No exams added yet</div>'; return; }
+  const now = new Date(); now.setHours(0,0,0,0);
+  list.innerHTML = exams.map(e=>{
+    const examDate = new Date(e.date); examDate.setHours(0,0,0,0);
+    const days = Math.round((examDate-now)/(1000*60*60*24));
+    const colour = days<=7?'var(--red)':days<=14?'var(--amber)':'var(--green)';
+    return `<div class="exam-item">
+      <div>
+        <div class="exam-name">${e.name}</div>
+        <div class="exam-meta">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="exam-days" style="color:${colour}">${days>0?days:days===0?'Today!':'Past'}</div>
+        <div class="exam-days-label">${days>0?'days left':''}</div>
+        <button onclick="deleteExam(${e.id})" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:3px">remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteExam(id) {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]').filter(e=>e.id!==id);
+  localStorage.setItem('exams', JSON.stringify(exams));
+  renderExams();
+}
+
+// Timetable
+function generateTimetable() {
+  const stats = getStats();
+  const ss = stats.subjectStats||{};
+  const subjects = Object.keys(ss).length>0 ? Object.keys(ss) : [subject];
+  const timetable = [];
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const today = new Date();
+  today.setDate(today.getDate()-(today.getDay()||7)+1); // Start from Monday
+
+  for(let i=0;i<7;i++){
+    const d = new Date(today); d.setDate(today.getDate()+i);
+    const daySubjects = [];
+    const sessionsPerDay = i<5 ? 2 : 3; // More on weekends
+    for(let j=0;j<sessionsPerDay;j++){
+      daySubjects.push({
+        subject: subjects[(i*sessionsPerDay+j)%subjects.length],
+        time: i<5?(j===0?'4:00 PM':'6:00 PM'):(j===0?'10:00 AM':j===1?'2:00 PM':'5:00 PM'),
+        duration: '45 min',
+        done: false,
+        id: `${d.toISOString().split('T')[0]}-${j}`
+      });
+    }
+    timetable.push({date: d.toISOString().split('T')[0], dayName: days[i], sessions: daySubjects});
+  }
+
+  localStorage.setItem('timetable', JSON.stringify(timetable));
+  renderTimetable();
+  toast('✓ Timetable generated!','success');
+}
+
+function renderTimetable() {
+  const timetable = JSON.parse(localStorage.getItem('timetable')||'[]');
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const wrap = document.getElementById('timetable-wrap');
+  if(!timetable.length){wrap.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Click Auto-Generate to create a personalised revision plan</div>';return;}
+  const today=new Date().toISOString().split('T')[0];
+  wrap.innerHTML=timetable.map(day=>`
+    <div class="timetable-day">
+      <div class="tt-day-header">
+        <div class="tt-day-name">${day.dayName}${day.date===today?' — Today':''}</div>
+        <div class="tt-day-date">${new Date(day.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+      </div>
+      ${day.sessions.length===0?'<div class="tt-empty">Rest day 🎉</div>':day.sessions.map(s=>`
+        <div class="tt-session${completed.includes(s.id)?' done':''}">
+          <div class="tt-check${completed.includes(s.id)?' checked':''}" onclick="toggleTT('${s.id}')">
+            ${completed.includes(s.id)?'✓':''}
+          </div>
+          <div class="tt-subj">${s.subject}</div>
+          <div class="tt-time">${s.time} · ${s.duration}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function toggleTT(id) {
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const idx = completed.indexOf(id);
+  if(idx>=0) completed.splice(idx,1); else completed.push(id);
+  localStorage.setItem('tt_completed', JSON.stringify(completed));
+  renderTimetable();
+  if(idx<0) { trackSession('timetable',{}); }
+}
+
+// Initialise stats on load
+function initStats() {
+  const stats = getStats();
+  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
+}
 
 // ─── MOBILE NAV ──────────────────────────────────────────────────────────────
 function mobileTab(tab) {
@@ -1539,6 +2396,13 @@ function mobileTab(tab) {
         Now: <b style="color:var(--text)">${mode}</b> · <b style="color:var(--accent)">${subject}</b> · ${level}
       </div>`;
     openMobDrawer();
+  }
+
+  if (tab === 'progress') {
+    openProgress();
+    // Close drawer since progress opens its own modal
+    document.getElementById('mob-drawer').classList.remove('open');
+    return;
   }
 
   if (tab === 'saved') {
