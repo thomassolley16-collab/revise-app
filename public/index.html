@@ -99,7 +99,14 @@ nav.topnav{display:flex;align-items:center;justify-content:space-between;padding
 
 /* MAIN */
 .main{display:flex;flex-direction:column;overflow:hidden;min-height:0}
-.ipanel{padding:1.1rem 1.5rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0;overflow:visible}
+.ipanel{padding:1.1rem 1.5rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0;overflow:visible;transition:all .3s ease}
+.ipanel.collapsed{padding:.6rem 1.5rem;border-bottom:1px solid var(--border)}
+.ipanel.collapsed .upload-row,.ipanel.collapsed textarea,.ipanel.collapsed .chips,.ipanel.collapsed .count-selector,.ipanel.collapsed #essay-fields,.ipanel.collapsed .upload-status,.ipanel.collapsed #study-subheading{display:none!important}
+.ipanel.collapsed #study-heading{font-size:1rem;margin-bottom:0}
+.ipanel.collapsed .action-row{margin-top:4px}
+.results-toggle{display:none;align-items:center;gap:6px;background:none;border:none;color:var(--accent);font-family:var(--ff);font-size:12px;cursor:pointer;padding:4px 0;margin-top:4px}
+.results-toggle.show{display:flex}
+.results-toggle:hover{opacity:.8}
 .ipanel h2{font-family:var(--fd);font-size:1.4rem;font-weight:400;margin-bottom:2px}
 .ipanel h2 em{color:var(--accent);font-style:italic}
 .ipanel p{color:var(--muted);font-size:13px;margin-bottom:.65rem}
@@ -316,17 +323,28 @@ textarea:focus{outline:none;border-color:var(--accent)}
 .chart-labels{display:flex;gap:3px;margin-top:3px}
 .chart-label{flex:1;font-size:9px;color:var(--muted);text-align:center}
 
-/* EXAM COUNTDOWN */
-.exam-list{display:flex;flex-direction:column;gap:6px}
-.exam-item{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between}
-.exam-name{font-size:13px;font-weight:500}
-.exam-meta{font-size:11px;color:var(--muted)}
-.exam-days{font-size:18px;font-family:var(--fd);color:var(--accent);text-align:right;flex-shrink:0}
-.exam-days-label{font-size:10px;color:var(--muted);text-align:right}
-.exam-add{display:flex;gap:6px;margin-bottom:8px}
-.exam-add input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--ff);font-size:12px}
-.exam-add input:focus{outline:none;border-color:var(--accent)}
-.exam-add button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:var(--ff);font-size:12px;cursor:pointer;white-space:nowrap}
+/* EXAM COUNTDOWNS */
+.exam-input-row{display:grid;grid-template-columns:1fr 140px auto;gap:7px;margin-bottom:12px}
+.exam-input-row input{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px;width:100%}
+.exam-input-row input:focus{outline:none;border-color:var(--accent)}
+.exam-input-row .add-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.exam-input-row .add-btn:hover{background:#6a4ef0}
+.exam-cards-wrap{display:flex;flex-direction:column;gap:8px}
+.exam-countdown-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+.exam-countdown-card:hover{border-color:var(--border2)}
+.exam-cd-left{flex:1;min-width:0}
+.exam-cd-name{font-size:14px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exam-cd-date{font-size:12px;color:var(--muted)}
+.exam-cd-bar-wrap{margin-top:8px}
+.exam-cd-bar-bg{height:3px;background:var(--surface2);border-radius:2px}
+.exam-cd-bar-fill{height:3px;border-radius:2px;transition:width .6s ease}
+.exam-cd-bar-label{font-size:10px;color:var(--muted);margin-top:3px}
+.exam-cd-right{text-align:center;flex-shrink:0;min-width:64px}
+.exam-cd-num{font-size:28px;font-family:var(--fd);font-weight:400;line-height:1}
+.exam-cd-unit{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:2px}
+.exam-cd-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:6px;font-size:14px;flex-shrink:0;align-self:flex-start}
+.exam-cd-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.exam-empty{font-size:13px;color:var(--muted);text-align:center;padding:1.5rem;background:var(--surface2);border-radius:10px;border:1px dashed var(--border2)}
 
 /* DAILY GOAL */
 .goal-ring-wrap{display:flex;align-items:center;gap:14px}
@@ -830,6 +848,9 @@ textarea:focus{outline:none;border-color:var(--accent)}
           <button class="gen-btn" id="gen-btn" onclick="generate()"><span id="gen-txt">✦ Generate</span></button>
           <span class="ccount" id="ccount">0 characters</span>
         </div>
+        <button class="results-toggle" id="results-toggle" onclick="toggleInputCollapse()">
+          ▼ Show results
+        </button>
       </div>
       <div class="rpanel" id="results">
         <div class="empty">
@@ -889,12 +910,12 @@ textarea:focus{outline:none;border-color:var(--accent)}
         <!-- EXAM COUNTDOWNS -->
         <div class="prog-card" style="margin-bottom:10px">
           <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Exam Countdowns</div>
-          <div class="exam-add-row" style="margin-bottom:10px">
-            <input type="text" id="exam-name-input" placeholder="e.g. Biology Paper 1">
+          <div class="exam-input-row">
+            <input type="text" id="exam-name-input" placeholder="e.g. Biology Paper 1 — 16 June">
             <input type="date" id="exam-date-input">
-            <button class="add-btn" onclick="addExam()">+ Add</button>
+            <button class="add-btn" onclick="addExam()">+ Add Exam</button>
           </div>
-          <div id="exams-list-main"></div>
+          <div class="exam-cards-wrap" id="exams-list-main"></div>
         </div>
 
         <!-- BADGES -->
@@ -1526,6 +1547,7 @@ function loadSample(k){ const ta=document.getElementById('notes'); ta.value=SAMP
 
 // ─── GENERATE ────────────────────────────────────────────────────────────────
 async function generate() {
+  expandInput();
   const notes=document.getElementById('notes').value.trim();
   if (!notes) { document.getElementById('notes').focus(); return; }
 
@@ -1622,12 +1644,43 @@ ${notes}`
 // ─── RENDER ──────────────────────────────────────────────────────────────────
 function tags(){ return `<span class="tag a">${subject}</span><span class="tag l">${level}</span><span class="tag">${examBoard}</span>`; }
 
+let inputCollapsed = false;
+function toggleInputCollapse() {
+  inputCollapsed = !inputCollapsed;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(inputCollapsed) {
+    ipanel.classList.add('collapsed');
+    btn.textContent = '▲ Show input';
+  } else {
+    ipanel.classList.remove('collapsed');
+    btn.textContent = '▼ Show results';
+  }
+}
+
+function collapseInput() {
+  inputCollapsed = true;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(ipanel) ipanel.classList.add('collapsed');
+  if(btn) { btn.textContent = '▲ Show input'; btn.classList.add('show'); }
+}
+
+function expandInput() {
+  inputCollapsed = false;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(ipanel) ipanel.classList.remove('collapsed');
+  if(btn) { btn.textContent = '▼ Show results'; btn.classList.remove('show'); }
+}
+
 function renderResults(data) {
-  // Scroll to results after rendering
+  // Collapse input to give results more space, then scroll to top of results
+  collapseInput();
   setTimeout(()=>{
     const r = document.getElementById('results');
-    if(r) r.scrollTop = 0;
-  }, 50);
+    if(r) { r.scrollTop = 0; }
+  }, 100);
   if (mode==='flashcards') {
     statCards+=data.length; document.getElementById('stat-cards').textContent=statCards;
     currentCards=data; renderCards(data,null);
@@ -1756,16 +1809,33 @@ function toast(msg,type='success'){
 
 // ─── PROGRESS & STATS ────────────────────────────────────────────────────────
 const BADGES = [
-  {id:'first_session',icon:'🌱',name:'First Steps',desc:'Complete your first session',check:s=>s.totalSessions>=1},
-  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'3 day streak',check:s=>s.streak>=3},
-  {id:'streak_7',icon:'⚡',name:'Week Warrior',desc:'7 day streak',check:s=>s.streak>=7},
-  {id:'cards_50',icon:'🃏',name:'Card Shark',desc:'Create 50 flashcards',check:s=>s.totalCards>=50},
-  {id:'cards_100',icon:'💎',name:'Card Master',desc:'Create 100 flashcards',check:s=>s.totalCards>=100},
-  {id:'quiz_10',icon:'🎯',name:'Quiz Whiz',desc:'Answer 10 questions',check:s=>s.totalQuiz>=10},
-  {id:'quiz_50',icon:'🏆',name:'Quiz Champion',desc:'Answer 50 questions',check:s=>s.totalQuiz>=50},
-  {id:'subjects_3',icon:'📚',name:'Multi-Subject',desc:'Study 3 different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=3},
-  {id:'essay_1',icon:'✍️',name:'Essay Pro',desc:'Get essay feedback',check:s=>s.totalEssays>=1},
-  {id:'sessions_10',icon:'🎓',name:'Dedicated',desc:'Complete 10 sessions',check:s=>s.totalSessions>=10},
+  // Easy
+  {id:'first_session',icon:'🌱',name:'First Steps',desc:'Complete your very first revision session',check:s=>s.totalSessions>=1},
+  {id:'first_essay',icon:'✍️',name:'First Draft',desc:'Get your first essay marked',check:s=>s.totalEssays>=1},
+  {id:'cards_10',icon:'🃏',name:'Card Collector',desc:'Create 10 flashcards',check:s=>s.totalCards>=10},
+  {id:'quiz_5',icon:'🎯',name:'Quiz Starter',desc:'Answer 5 quiz questions',check:s=>s.totalQuiz>=5},
+  // Medium
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'Study 3 days in a row',check:s=>s.streak>=3},
+  {id:'streak_7',icon:'⚡',name:'Week Warrior',desc:'Study every day for a full week',check:s=>s.streak>=7},
+  {id:'cards_50',icon:'💡',name:'Card Shark',desc:'Create 50 flashcards in total',check:s=>s.totalCards>=50},
+  {id:'quiz_25',icon:'🎪',name:'Quiz Enthusiast',desc:'Answer 25 quiz questions',check:s=>s.totalQuiz>=25},
+  {id:'sessions_10',icon:'📖',name:'Regular Reviser',desc:'Complete 10 revision sessions',check:s=>s.totalSessions>=10},
+  {id:'subjects_3',icon:'📚',name:'Well-Rounded',desc:'Study 3 or more different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=3},
+  {id:'essay_5',icon:'🖊️',name:'Essay Expert',desc:'Get 5 essays marked',check:s=>s.totalEssays>=5},
+  // Hard
+  {id:'streak_14',icon:'🌟',name:'Fortnight Grind',desc:'Study every day for 14 days straight',check:s=>s.streak>=14},
+  {id:'streak_30',icon:'🏅',name:'Monthly Master',desc:'Study every day for 30 days',check:s=>s.streak>=30},
+  {id:'cards_100',icon:'💎',name:'Card Master',desc:'Create 100 flashcards in total',check:s=>s.totalCards>=100},
+  {id:'quiz_100',icon:'🏆',name:'Quiz Champion',desc:'Answer 100 quiz questions',check:s=>s.totalQuiz>=100},
+  {id:'sessions_50',icon:'🎓',name:'Dedicated Scholar',desc:'Complete 50 revision sessions',check:s=>s.totalSessions>=50},
+  {id:'subjects_5',icon:'🌍',name:'Polymath',desc:'Study 5 or more different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=5},
+  // Legendary
+  {id:'streak_100',icon:'👑',name:'Century Streak',desc:'Study every single day for 100 days',check:s=>s.streak>=100},
+  {id:'cards_500',icon:'🚀',name:'Card Legend',desc:'Create 500 flashcards in total',check:s=>s.totalCards>=500},
+  {id:'cards_1000',icon:'🌌',name:'Flashcard God',desc:'Create 1,000 flashcards — the ultimate card collector',check:s=>s.totalCards>=1000},
+  {id:'quiz_500',icon:'🔱',name:'Quiz God',desc:'Answer 500 quiz questions',check:s=>s.totalQuiz>=500},
+  {id:'sessions_100',icon:'🏛️',name:'Revision Legend',desc:'Complete 100 revision sessions',check:s=>s.totalSessions>=100},
+  {id:'streak_365',icon:'💫',name:'Year of Study',desc:'Study every day for an entire year — extraordinary',check:s=>s.streak>=365},
 ];
 
 function getStats() {
@@ -1825,6 +1895,18 @@ function trackSession(mode, data) {
 
   // Check for new badges
   checkBadges(stats);
+}
+
+function showBadgeInfo(id) {
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  const b = BADGES.find(x=>x.id===id);
+  if(!b) return;
+  const isEarned = earned.includes(id);
+  // Show a simple toast with the badge info
+  const msg = isEarned
+    ? `${b.icon} ${b.name} — ${b.desc}`
+    : `🔒 ${b.name} — ${b.desc}`;
+  toast(msg, isEarned?'success':'success');
 }
 
 function checkBadges(stats) {
@@ -1931,9 +2013,10 @@ function refreshProgressPanel() {
   // Badges
   const badgesGrid=document.getElementById('prog-badges-grid');
   if(badgesGrid) badgesGrid.innerHTML=BADGES.map(b=>`
-    <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" title="${b.desc}">
+    <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" onclick="showBadgeInfo('${b.id}')" style="cursor:pointer">
       <div class="badge-icon">${b.icon}</div>
       <div class="badge-name">${b.name}</div>
+      ${earned.includes(b.id)?'<div style="font-size:9px;color:var(--green);margin-top:2px">✓ Earned</div>':'<div style="font-size:9px;color:var(--muted);margin-top:2px">Locked</div>'}
     </div>`).join('');
 }
 
@@ -1962,23 +2045,36 @@ function renderExamsMain() {
   const list = document.getElementById('exams-list-main');
   if (!list) return;
   if (!exams.length) {
-    list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:8px 0">No exams added yet — add one above to get started</div>';
+    list.innerHTML='<div class="exam-empty">No exams added yet — enter an exam name and date above to start your countdown</div>';
     return;
   }
-  list.innerHTML = exams.map(e=>{
+  // Sort by date
+  const sorted = [...exams].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  list.innerHTML = sorted.map(e=>{
     const days = getExamDays(e.date);
-    const colour = days<=7?'var(--red)':days<=14?'var(--amber)':'var(--green)';
-    const label = days>0?days+' days':days===0?'TODAY':'Past';
-    return `<div class="exam-card">
-      <div class="exam-card-info">
-        <div class="exam-card-name">${e.name}</div>
-        <div class="exam-card-date">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+    const isPast = days < 0;
+    const isToday = days === 0;
+    const colour = isPast?'var(--muted)':days<=7?'var(--red)':days<=21?'var(--amber)':'var(--green)';
+    // Progress bar: 0 days = 100%, 180 days = 0%
+    const startDays = 180;
+    const pct = isPast?100:Math.max(0,Math.round((1-days/startDays)*100));
+    const barColour = days<=7?'var(--red)':days<=21?'var(--amber)':'var(--accent)';
+    const dayLabel = isPast?'Past':isToday?'Today!':days===1?'1 day':days+' days';
+    const unitLabel = isPast?'exam passed':isToday?'good luck!':'to go';
+    return `<div class="exam-countdown-card">
+      <div class="exam-cd-left">
+        <div class="exam-cd-name">${e.name}</div>
+        <div class="exam-cd-date">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+        ${!isPast?`<div class="exam-cd-bar-wrap">
+          <div class="exam-cd-bar-bg"><div class="exam-cd-bar-fill" style="width:${pct}%;background:${barColour}"></div></div>
+          <div class="exam-cd-bar-label">${pct}% through revision period</div>
+        </div>`:''}
       </div>
-      <div class="exam-card-days">
-        <div class="exam-card-num" style="color:${colour}">${label}</div>
-        <div class="exam-card-lbl">${days>0?'days left':''}</div>
+      <div class="exam-cd-right">
+        <div class="exam-cd-num" style="color:${colour}">${dayLabel}</div>
+        <div class="exam-cd-unit">${unitLabel}</div>
       </div>
-      <button class="exam-card-del" onclick="deleteExam(${e.id})" title="Remove">✕</button>
+      <button class="exam-cd-del" onclick="deleteExam(${e.id})" title="Remove exam">✕</button>
     </div>`;
   }).join('');
 }
