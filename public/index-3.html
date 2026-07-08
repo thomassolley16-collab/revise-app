@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Revise AI — Smart Study Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{--bg:#0e0e11;--surface:#16161a;--surface2:#1e1e24;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);--text:#f0efe8;--muted:#8a8a96;--card:#16161a;--overlay:rgba(0,0,0,0.75)}
+:root[data-theme="light"]{--bg:#f4f4f0;--surface:#ffffff;--surface2:#ededf5;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.16);--text:#18181f;--muted:#65657a;--card:#ffffff;--overlay:rgba(0,0,0,0.5)}
+:root{--accent:#7c5cfc;--al:rgba(124,92,252,0.13);--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--radius:13px;--ff:'DM Sans',sans-serif;--fd:'Instrument Serif',Georgia,serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ff);font-size:15px;line-height:1.6;min-height:100vh;transition:background .2s,color .2s}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* NAV */
+nav.topnav{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.5rem;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;gap:10px}
+.logo{font-family:var(--fd);font-size:1.4rem;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+.nav-right{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.nbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nbtn:hover{color:var(--text);border-color:var(--border2)}
+.nbtn.accent{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.nbtn.accent:hover{background:#6a4ef0}
+.pro-badge{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
+.free-pill{background:var(--surface2);border:1px solid var(--border2);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--muted)}
+.free-pill b{color:var(--red)}
+
+/* DESKTOP LAYOUT */
+.app{display:grid;grid-template-columns:268px 1fr;height:calc(100vh - 54px)}
+.sidebar{border-right:1px solid var(--border);overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:1rem}
+.sh3{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+
+/* FREE BANNER */
+.free-banner{background:linear-gradient(135deg,rgba(124,92,252,.15),rgba(245,158,11,.1));border:1px solid rgba(124,92,252,.3);border-radius:11px;padding:11px 13px;cursor:pointer;transition:all .15s}
+.free-banner:hover{border-color:var(--accent)}
+.free-banner h4{font-size:13px;font-weight:600;margin-bottom:4px}
+.free-banner p{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.free-banner .upgrade-cta{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-family:var(--ff);font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:all .15s}
+.free-banner .upgrade-cta:hover{background:#6a4ef0}
+.usage-bar-bg{width:100%;height:4px;background:var(--border2);border-radius:2px;margin-bottom:6px}
+.usage-bar-fill{height:4px;border-radius:2px;background:var(--accent);transition:width .4s}
+
+/* LEVEL TOGGLE */
+.level-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+.lvl-btn{flex:1;padding:6px;border:none;border-radius:7px;font-family:var(--ff);font-size:12px;font-weight:500;color:var(--muted);background:transparent;cursor:pointer;transition:all .18s}
+.lvl-btn.active{background:var(--accent);color:#fff}
+.lvl-btn:not(.active):hover{color:var(--text)}
+
+/* SUBJECTS */
+.subj-search{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;color:var(--text);font-family:var(--ff);font-size:13px;margin-bottom:7px}
+.subj-search::placeholder{color:var(--muted)}
+.subj-search:focus{outline:none;border-color:var(--accent)}
+.subj-cats{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:9px}
+.scat-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.scat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sbtn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 4px;font-family:var(--ff);font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center;line-height:1.3}
+.sbtn:hover{border-color:var(--border2);color:var(--text)}
+.sbtn.active{background:var(--al);border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px rgba(124,92,252,0.18);font-weight:600}
+.sbtn .si{font-size:14px;display:block;margin-bottom:2px}
+
+/* EXAM BOARD */
+.esel{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px;cursor:pointer;appearance:none}
+.esel:focus{outline:none;border-color:var(--accent)}
+
+/* SELECTION PILL */
+.sel-pill{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;display:flex;flex-wrap:wrap;align-items:center;gap:5px;font-size:11px}
+.sp-level{color:var(--accent);font-weight:600}
+.sp-sep{color:var(--border2)}
+.sp-sub{color:var(--text);font-weight:500}
+.sp-board{color:var(--muted)}
+
+/* MODES */
+.mode-list{display:flex;flex-direction:column;gap:4px}
+.mbtn{display:flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-family:var(--ff);font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:left;width:100%}
+.mbtn:hover{color:var(--text);border-color:var(--border2)}
+.mbtn.active{background:var(--al);border-color:var(--accent);color:var(--text)}
+.micon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.mbtn.active .micon{background:var(--al)}
+.mlabel{font-size:13px}
+.msub{font-size:11px;color:var(--muted)}
+.pro-lock{font-size:10px;background:rgba(245,158,11,.15);color:#f59e0b;border-radius:999px;padding:1px 6px;margin-left:auto;flex-shrink:0}
+
+/* SAVED SETS */
+.sets-list{display:flex;flex-direction:column;gap:4px;max-height:150px;overflow-y:auto}
+.set-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;cursor:pointer;transition:all .15s}
+.set-item:hover{border-color:var(--border2)}
+.set-title{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-meta{font-size:10px;color:var(--muted)}
+.set-del{font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 5px;border-radius:4px;flex-shrink:0}
+.set-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.empty-sets{font-size:12px;color:var(--muted);text-align:center;padding:12px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.scard{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:9px 11px}
+.scard-val{font-size:20px;font-family:var(--fd);color:var(--text)}
+.scard-label{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.ipanel{padding:1.1rem 1.5rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0;overflow:visible;transition:all .3s ease}
+.ipanel.collapsed{padding:.6rem 1.5rem;border-bottom:1px solid var(--border)}
+.ipanel.collapsed .upload-row,.ipanel.collapsed textarea,.ipanel.collapsed .chips,.ipanel.collapsed .count-selector,.ipanel.collapsed #essay-fields,.ipanel.collapsed .upload-status,.ipanel.collapsed #study-subheading{display:none!important}
+.ipanel.collapsed #study-heading{font-size:1rem;margin-bottom:0}
+.ipanel.collapsed .action-row{margin-top:4px}
+.results-toggle{display:none;align-items:center;gap:6px;background:none;border:none;color:var(--accent);font-family:var(--ff);font-size:12px;cursor:pointer;padding:4px 0;margin-top:4px}
+.results-toggle.show{display:flex}
+.results-toggle:hover{opacity:.8}
+.ipanel h2{font-family:var(--fd);font-size:1.4rem;font-weight:400;margin-bottom:2px}
+.ipanel h2 em{color:var(--accent);font-style:italic}
+.ipanel p{color:var(--muted);font-size:13px;margin-bottom:.65rem}
+.upload-row{display:flex;gap:6px;margin-bottom:7px;flex-wrap:wrap}
+.upbtn{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
+.upbtn:hover{border-color:var(--border2);color:var(--text)}
+textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;color:var(--text);font-family:var(--ff);font-size:14px;line-height:1.7;resize:none;height:110px;transition:border-color .15s}
+textarea::placeholder{color:var(--muted)}
+textarea:focus{outline:none;border-color:var(--accent)}
+.action-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
+.gen-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-family:var(--ff);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px}
+.gen-btn:hover{background:#6a4ef0;transform:translateY(-1px)}
+.gen-btn:active{transform:none}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.ccount{font-size:12px;color:var(--muted);margin-left:auto}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;align-items:center}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--border2);color:var(--text)}
+.upload-status{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:9px 13px;font-size:13px;color:var(--muted);align-items:center;gap:10px;margin-bottom:7px}
+.upload-status .spin{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+
+/* RESULTS */
+.rpanel{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;min-height:0}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;text-align:center}
+.empty-icon{font-size:36px;opacity:.2}
+.empty h3{font-family:var(--fd);font-size:1.2rem;font-weight:400;opacity:.35}
+.empty p{font-size:13px;color:var(--muted);max-width:280px;opacity:.6}
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.rh h2{font-family:var(--fd);font-size:1.2rem;font-weight:400}
+.tag{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:3px 9px;font-size:11px;color:var(--muted);margin-right:4px}
+.tag.a{background:var(--al);border-color:rgba(124,92,252,.3);color:var(--accent)}
+.tag.l{background:rgba(200,240,96,.1);border-color:rgba(200,240,96,.3);color:#7a9e1a}
+
+/* CARDS */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px}
+.fc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;transition:all .2s;position:relative;overflow:hidden}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#c8f060);opacity:0;transition:opacity .2s}
+.fc:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.fc:hover::before{opacity:1}
+.flabel{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.fq{font-size:14px;font-weight:500;margin-bottom:8px}
+.fa{font-size:13px;color:var(--muted);background:var(--surface2);border-radius:7px;padding:8px 10px;border-left:2px solid var(--accent);line-height:1.6}
+.src{display:flex;gap:5px;margin-top:9px}
+.srcb{flex:1;border:none;border-radius:7px;padding:6px 4px;font-family:var(--ff);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.srcb.h{background:rgba(239,68,68,.12);color:var(--red)}
+.srcb.h:hover{background:rgba(239,68,68,.22)}
+.srcb.o{background:rgba(245,158,11,.12);color:var(--amber)}
+.srcb.o:hover{background:rgba(245,158,11,.22)}
+.srcb.e{background:rgba(34,197,94,.12);color:var(--green)}
+.srcb.e:hover{background:rgba(34,197,94,.22)}
+.sr-due{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.sr-badge{position:absolute;top:8px;right:8px;font-size:10px;border-radius:999px;padding:2px 7px;font-weight:600}
+.sr-due-now{background:rgba(239,68,68,.12);color:var(--red)}
+.sr-ok{background:rgba(34,197,94,.1);color:var(--green)}
+
+/* QUIZ */
+.qwrap{max-width:640px}
+.qq{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:9px}
+.qq h3{font-family:var(--fd);font-size:1.05rem;font-weight:400;margin-bottom:.9rem;line-height:1.5}
+.qopts{display:flex;flex-direction:column;gap:6px}
+.qopt{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:13px;cursor:pointer;transition:all .15s;text-align:left;color:var(--text);font-family:var(--ff);display:flex;align-items:center;gap:8px}
+.qopt:hover:not(:disabled){border-color:var(--accent)}
+.qopt.correct{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)}
+.qopt.wrong{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
+.qopt:disabled{cursor:default}
+.oletter{width:22px;height:22px;border-radius:5px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.qexp{background:var(--surface2);border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:9px;padding:9px 11px;font-size:13px;color:var(--muted);margin-top:8px;display:none;line-height:1.7}
+.qexp.show{display:block}
+
+/* ESSAY */
+.ewrap{max-width:640px;display:flex;flex-direction:column;gap:9px}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.fh{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.fh h3{font-size:13px;font-weight:500}
+.gbadge{font-family:var(--fd);font-size:1.25rem;background:var(--al);color:var(--accent);padding:3px 12px;border-radius:8px}
+.fb{padding:1rem 1.25rem}
+.fs{margin-bottom:.9rem}
+.fs:last-child{margin-bottom:0}
+.fs h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px}
+.fs p{font-size:14px;line-height:1.7}
+.sbars{display:flex;flex-direction:column;gap:6px}
+.sbar{display:flex;align-items:center;gap:10px}
+.sbar-label{font-size:12px;color:var(--muted);width:95px;flex-shrink:0}
+.sbar-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px}
+.sbar-fill{height:5px;border-radius:3px;background:var(--accent);transition:width .8s}
+.sbar-val{font-size:12px;color:var(--muted);width:28px;text-align:right;flex-shrink:0}
+
+/* SAVE BTN */
+.save-set-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;margin-bottom:10px}
+.save-set-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* SRS BAR */
+.srs-bar{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.srs-stats{display:flex;gap:16px}
+.srs-stat{text-align:center}
+.srs-sv{font-size:18px;font-family:var(--fd)}
+.srs-sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+/* LOADING */
+.lwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;gap:12px}
+.spin{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+.lwrap p{font-size:13px;color:var(--muted)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:var(--overlay);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.overlay.hidden{display:none}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:1.75rem;width:100%;max-width:410px;position:relative;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:var(--fd);font-size:1.5rem;font-weight:400;margin-bottom:5px}
+.modal>p{font-size:13px;color:var(--muted);margin-bottom:1.1rem;line-height:1.6}
+.mclose{position:absolute;top:13px;right:13px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;width:28px;height:28px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.mclose:hover{color:var(--text)}
+.fg{margin-bottom:11px}
+.fg label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500}
+.finput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:var(--ff);font-size:14px;transition:border-color .15s}
+.finput:focus{outline:none;border-color:var(--accent)}
+.fbtn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-family:var(--ff);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;margin-top:4px}
+.social-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:11px 16px;font-family:var(--ff);font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:all .15s}
+.social-btn:hover{border-color:var(--accent);background:var(--surface)}
+
+.fbtn:hover{background:#6a4ef0}
+.fbtn:disabled{opacity:.5;cursor:not-allowed}
+.mswitch{text-align:center;margin-top:11px;font-size:13px;color:var(--muted)}
+.mswitch a{color:var(--accent);cursor:pointer;font-weight:500}
+.merr{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--red);margin-bottom:11px;display:none}
+.merr.show{display:block}
+.pw-price{text-align:center;background:var(--al);border:1px solid rgba(124,92,252,.25);border-radius:12px;padding:1.25rem;margin-bottom:1.1rem}
+.pw-price .price{font-family:var(--fd);font-size:2.8rem;color:var(--accent);line-height:1}
+.pw-price .period{font-size:13px;color:var(--muted);margin-top:3px}
+.compare{width:100%;border-collapse:collapse;margin-bottom:1.1rem;font-size:13px}
+.compare th{padding:6px 10px;text-align:left;color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)}
+.compare td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.compare td:nth-child(2){text-align:center;color:var(--muted)}
+.compare td:nth-child(3){text-align:center;color:var(--green);font-weight:600}
+.compare tr:last-child td{border-bottom:none}
+.compare .check{color:var(--green)}
+.compare .cross{color:var(--red)}
+.compare .dim{color:var(--muted);font-size:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.slabel{font-size:14px}
+.ssub{font-size:12px;color:var(--muted)}
+.tswitch{position:relative;width:42px;height:24px}
+.tswitch input{opacity:0;width:0;height:0}
+.tslider{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border);border-radius:999px;cursor:pointer;transition:.2s}
+.tslider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.2s}
+.tswitch input:checked+.tslider{background:var(--accent);border-color:var(--accent)}
+.tswitch input:checked+.tslider::before{transform:translateX(18px);background:#fff}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;font-size:13px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.25);transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:300px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:rgba(34,197,94,.4)}
+.toast.error{border-color:rgba(239,68,68,.4)}
+.fade-in{animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* TOP TABS */
+.app-tabs{display:flex;gap:2px;padding:0 1.5rem;border-bottom:1px solid var(--border);background:var(--bg);overflow-x:auto;flex-shrink:0}
+.app-tab{padding:10px 16px;font-family:var(--ff);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.app-tab:hover{color:var(--text)}
+.app-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}
+.tab-panel.active{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+
+/* PROGRESS PANEL */
+.prog-panel{padding:1.25rem 1.5rem;overflow-y:auto;flex:1;min-height:0}
+.prog-top-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.prog-mini{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 12px;text-align:center}
+.prog-mini-val{font-size:22px;font-family:var(--fd)}
+.prog-mini-label{font-size:10px;color:var(--muted);margin-top:2px}
+
+@media(max-width:768px){
+  .app-tabs{padding:0 1rem;top:50px}
+  .app-tab{padding:8px 12px;font-size:12px}
+  .tt-panel,.prog-panel{padding:.9rem 1rem}
+  .prog-top-row{grid-template-columns:1fr 1fr}
+  .tt-form-grid{grid-template-columns:1fr}
+}
+
+/* COUNT SELECTOR */
+.count-selector{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.count-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.count-btns{display:flex;gap:4px}
+.cbtn{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:4px 10px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s}
+.cbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cbtn:hover:not(.active){border-color:var(--border2);color:var(--text)}
+
+/* PROGRESS DASHBOARD */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 14px}
+.prog-card.wide{grid-column:span 2}
+.prog-val{font-size:26px;font-family:var(--fd);font-weight:400;color:var(--text)}
+.prog-label{font-size:11px;color:var(--muted);margin-top:2px}
+.prog-change{font-size:11px;color:var(--green);margin-top:2px}
+.streak-fire{font-size:24px;margin-bottom:4px}
+
+/* STREAK */
+.streak-row{display:flex;gap:4px;margin-top:8px}
+.streak-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.streak-day.done{background:rgba(124,92,252,.2);color:var(--accent)}
+.streak-day.today{background:var(--accent);color:#fff}
+.streak-day.missed{background:var(--surface2);color:var(--muted)}
+
+/* BADGES */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px}
+.badge-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;transition:all .2s}
+.badge-item.earned{background:rgba(124,92,252,.1);border-color:rgba(124,92,252,.3)}
+.badge-item.locked{opacity:.4}
+.badge-icon{font-size:22px;margin-bottom:4px}
+.badge-name{font-size:10px;color:var(--muted);line-height:1.3}
+.badge-item.earned .badge-name{color:var(--text)}
+
+/* PROGRESS CHART */
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:50px;margin-top:8px}
+.chart-bar{flex:1;border-radius:3px 3px 0 0;background:var(--accent);opacity:.3;min-height:4px;transition:all .3s}
+.chart-bar.active{opacity:1}
+.chart-labels{display:flex;gap:3px;margin-top:3px}
+.chart-label{flex:1;font-size:9px;color:var(--muted);text-align:center}
+
+/* EXAM COUNTDOWNS */
+.exam-input-row{display:grid;grid-template-columns:1fr 140px auto;gap:7px;margin-bottom:12px}
+.exam-input-row input{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px;width:100%}
+.exam-input-row input:focus{outline:none;border-color:var(--accent)}
+.exam-input-row .add-btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.exam-input-row .add-btn:hover{background:#6a4ef0}
+.exam-cards-wrap{display:flex;flex-direction:column;gap:8px}
+.exam-countdown-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+.exam-countdown-card:hover{border-color:var(--border2)}
+.exam-cd-left{flex:1;min-width:0}
+.exam-cd-name{font-size:14px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exam-cd-date{font-size:12px;color:var(--muted)}
+.exam-cd-bar-wrap{margin-top:8px}
+.exam-cd-bar-bg{height:3px;background:var(--surface2);border-radius:2px}
+.exam-cd-bar-fill{height:3px;border-radius:2px;transition:width .6s ease}
+.exam-cd-bar-label{font-size:10px;color:var(--muted);margin-top:3px}
+.exam-cd-right{text-align:center;flex-shrink:0;min-width:64px}
+.exam-cd-num{font-size:28px;font-family:var(--fd);font-weight:400;line-height:1}
+.exam-cd-unit{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:2px}
+.exam-cd-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:6px;font-size:14px;flex-shrink:0;align-self:flex-start}
+.exam-cd-del:hover{color:var(--red);background:rgba(239,68,68,.1)}
+.exam-empty{font-size:13px;color:var(--muted);text-align:center;padding:1.5rem;background:var(--surface2);border-radius:10px;border:1px dashed var(--border2)}
+
+/* DAILY GOAL */
+.goal-ring-wrap{display:flex;align-items:center;gap:14px}
+.goal-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.goal-ring svg{transform:rotate(-90deg)}
+.goal-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.goal-ring-pct{font-size:15px;font-weight:700;color:var(--text)}
+.goal-ring-sub{font-size:8px;color:var(--muted)}
+.goal-info{flex:1}
+.goal-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.goal-sub{font-size:11px;color:var(--muted)}
+
+/* SUBJECT PROGRESS BARS */
+.subj-prog-list{display:flex;flex-direction:column;gap:8px}
+.subj-prog-row{display:flex;flex-direction:column;gap:3px}
+.subj-prog-top{display:flex;justify-content:space-between;font-size:12px}
+.subj-prog-name{color:var(--text);font-weight:500}
+.subj-prog-pct{color:var(--muted)}
+.subj-prog-bg{height:5px;background:var(--surface2);border-radius:3px}
+.subj-prog-fill{height:5px;border-radius:3px;background:var(--accent);transition:width .6s ease}
+
+/* TIMETABLE */
+.timetable-day{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden}
+.tt-day-header{padding:9px 13px;background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.tt-day-name{font-size:13px;font-weight:600}
+.tt-day-date{font-size:11px;color:var(--muted)}
+.tt-session{padding:9px 13px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.tt-session.done{opacity:.5}
+.tt-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.tt-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.tt-subj{font-size:13px;font-weight:500;flex:1}
+.tt-time{font-size:11px;color:var(--muted);white-space:nowrap}
+.tt-empty{padding:12px 13px;font-size:13px;color:var(--muted);text-align:center}
+
+/* NOTIFICATION */
+.notif-badge{position:absolute;top:-4px;right:-4px;width:8px;height:8px;background:var(--red);border-radius:50%}
+
+/* BOTTOM NAV */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border2);padding:.4rem 0 calc(.4rem + env(safe-area-inset-bottom));z-index:200;justify-content:space-around;align-items:center}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:5px 8px;color:var(--muted);font-family:var(--ff);font-size:10px;font-weight:500;border-radius:10px;transition:all .15s;min-width:52px}
+.bnav-btn.active{color:var(--accent)}
+.bnav-btn .bicon{font-size:19px;line-height:1}
+
+/* MOBILE DRAWER */
+.mob-drawer{display:none;position:fixed;inset:0;z-index:300}
+.mob-drawer.open{display:block}
+.mob-drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px)}
+.mob-drawer-panel{position:absolute;left:0;top:0;bottom:0;width:85%;max-width:320px;background:var(--surface);overflow-y:auto;padding:1.25rem;display:flex;flex-direction:column;gap:1rem;transform:translateX(-100%);transition:transform .25s ease}
+.mob-drawer.open .mob-drawer-panel{transform:translateX(0)}
+.mob-drawer-close{display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem}
+.mob-drawer-close button{background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center}
+
+/* TABLET (sidebar collapses to narrower) */
+@media(max-width:1024px) and (min-width:769px){
+  .app{grid-template-columns:220px 1fr}
+  .sbtn{font-size:10px;padding:6px 3px}
+  .scat-grid{grid-template-columns:1fr 1fr}
+  .ipanel{padding:1rem 1.25rem .85rem}
+  .cgrid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+  #upgrade-nav-btn{display:none!important}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .app{grid-template-columns:1fr;height:auto}
+  .sidebar{display:none}
+  .main{height:auto;overflow:visible}
+  .rpanel{min-height:40vh;padding:.9rem 1rem;overflow:visible}
+  nav.topnav{padding:.65rem 1rem}
+  .logo{font-size:1.15rem}
+  #upgrade-nav-btn{display:none!important}
+  #nav-usage{display:none!important}
+  .ipanel{padding:.9rem 1rem .75rem}
+  .ipanel h2{font-size:1.15rem}
+  .ipanel>p{display:none}
+  textarea{height:100px;font-size:15px;border-radius:10px}
+  .upload-row{gap:5px}
+  .upbtn{font-size:11px;padding:5px 9px}
+  .upbtn .lock{display:none}
+  .gen-btn{width:100%;justify-content:center;padding:13px;font-size:15px;border-radius:11px}
+  .action-row{flex-direction:column;gap:7px}
+  .ccount{margin-left:0;align-self:flex-end}
+  .chips{display:none}
+  .cgrid{grid-template-columns:1fr}
+  .qwrap,.ewrap{max-width:100%}
+  .fc{padding:.9rem}
+  .src{gap:4px}
+  .srcb{font-size:11px;padding:8px 3px}
+  .overlay{align-items:flex-end;padding:0}
+  .modal{border-radius:20px 20px 0 0;max-height:90vh;padding:1.5rem 1.25rem}
+  .bottom-nav{display:flex}
+  .rh{flex-direction:column;align-items:flex-start;gap:5px}
+  .toast{bottom:80px;right:1rem;left:1rem;max-width:100%}
+  body{padding-bottom:68px}
+  .qq{padding:1rem}
+  .qq h3{font-size:1rem}
+  .qopt{padding:10px 11px;font-size:14px}
+  .fb{padding:.9rem 1rem}
+}
+</style>
+</head>
+<body>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV (mobile only) -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="mobileTab('home')">
+    <span class="bicon">✦</span>Study
+  </button>
+  <button class="bnav-btn" id="bnav-modes" onclick="mobileTab('modes')">
+    <span class="bicon">🎯</span>Modes
+  </button>
+  <button class="bnav-btn" id="bnav-subjects" onclick="mobileTab('subjects')">
+    <span class="bicon">📚</span>Subjects
+  </button>
+  <button class="bnav-btn" id="bnav-saved" onclick="mobileTab('saved')">
+    <span class="bicon">💾</span>Saved
+  </button>
+  <button class="bnav-btn" id="bnav-progress" onclick="mobileTab('progress')">
+    <span class="bicon">📊</span>Progress
+  </button>
+  <button class="bnav-btn" id="bnav-account" onclick="mobileTab('account')">
+    <span class="bicon">👤</span>Account
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-bg" onclick="closeMobDrawer()"></div>
+  <div class="mob-drawer-panel">
+    <div class="mob-drawer-close">
+      <div class="logo"><span class="logo-dot"></span>Revise AI</div>
+      <button onclick="closeMobDrawer()">✕</button>
+    </div>
+    <div id="mob-drawer-content"></div>
+  </div>
+</div>
+<!-- AUTH MODAL -->
+<div class="overlay hidden" id="m-auth">
+<div class="modal">
+  <button class="mclose" onclick="closeM('m-auth')">✕</button>
+  <h2 id="auth-title">Welcome back</h2>
+  <p id="auth-sub">Sign in to save your progress and flashcard sets</p>
+  <div class="merr" id="auth-err"></div>
+
+  <!-- Social login buttons -->
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+    <button class="social-btn" onclick="signInWithProvider('google')">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/><path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+    <button class="social-btn" onclick="signInWithProvider('azure')">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h8.5v8.5H0V0z" fill="#F25022"/><path d="M9.5 0H18v8.5H9.5V0z" fill="#7FBA00"/><path d="M0 9.5h8.5V18H0V9.5z" fill="#00A4EF"/><path d="M9.5 9.5H18V18H9.5V9.5z" fill="#FFB900"/></svg>
+      Continue with Microsoft
+    </button>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <span style="font-size:12px;color:var(--muted)">or continue with email</span>
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+  </div>
+
+  <div class="fg"><label>Email</label><input class="finput" type="email" id="a-email" placeholder="you@example.com"></div>
+  <div class="fg"><label>Password</label><input class="finput" type="password" id="a-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleAuth()"></div>
+  <div class="fg" id="a-confirm-group" style="display:none"><label>Confirm Password</label><input class="finput" type="password" id="a-confirm" placeholder="••••••••"></div>
+  <button class="fbtn" id="auth-btn" onclick="handleAuth()">Sign In</button>
+  <div class="mswitch"><span id="a-switch-txt">Don't have an account?</span> <a onclick="toggleAuthMode()"><span id="a-switch-lnk">Sign up free</span></a></div>
+</div>
+</div>
+
+<!-- PAYWALL MODAL -->
+<div class="overlay hidden" id="m-paywall">
+<div class="modal" style="max-width:480px">
+  <button class="mclose" onclick="closePaywall()">✕</button>
+
+  <!-- STEP 1: Plans view -->
+  <div id="pw-plans">
+    <h2>Unlock Premium</h2>
+    <p id="pw-reason">Upgrade for unlimited access to every feature</p>
+    <div class="pw-price">
+      <div class="price">£4.99</div>
+      <div class="period">per month — cancel anytime</div>
+    </div>
+    <table class="compare">
+      <tr><th>Feature</th><th>Free</th><th>⭐ Pro</th></tr>
+      <tr><td>Generations per day</td><td class="dim">10</td><td>∞ Unlimited</td></tr>
+      <tr><td>Save flashcard sets</td><td class="cross">✕</td><td class="check">✓</td></tr>
+      <tr><td>Spaced repetition</td><td class="cross">✕</td><td class="check">✓</td></tr>
+      <tr><td>PDF & photo upload</td><td class="cross">✕</td><td class="check">✓</td></tr>
+      <tr><td>All 60+ subjects</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Essay feedback</td><td class="cross">✕</td><td class="check">✓</td></tr>
+    </table>
+    <button class="fbtn" id="checkout-btn" onclick="startCheckout()">⭐ Upgrade to Pro — £4.99/mo</button>
+    <div class="mswitch" style="margin-top:10px"><a onclick="closePaywall()">Maybe later</a></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:11px;color:var(--muted)">
+      <span>🔒 Secured by</span>
+      <span style="font-weight:700;color:var(--text)">Stripe</span>
+      <span>· No card stored on our servers</span>
+    </div>
+  </div>
+
+  <!-- STEP 2: Embedded Stripe checkout -->
+  <div id="pw-checkout" style="display:none">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+      <button onclick="showPlans()" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:5px 10px;cursor:pointer;color:var(--muted);font-size:13px">← Back</button>
+      <div>
+        <div style="font-weight:600;font-size:15px">Revise AI Pro</div>
+        <div style="font-size:12px;color:var(--muted)">£4.99/month · cancel anytime</div>
+      </div>
+    </div>
+    <div id="checkout-loading" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:2rem">
+      <div class="spin" style="width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%"></div>
+      <p style="font-size:13px;color:var(--muted)">Loading secure checkout…</p>
+    </div>
+    <div id="stripe-checkout-container"></div>
+  </div>
+
+  <!-- STEP 3: Success -->
+  <div id="pw-success" style="display:none;text-align:center;padding:1rem 0">
+    <div style="font-size:48px;margin-bottom:12px">🎉</div>
+    <h2 style="margin-bottom:8px">You're now Pro!</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem">All features unlocked. Happy revising!</p>
+    <button class="fbtn" onclick="closePaywall()">Start studying →</button>
+  </div>
+</div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay hidden" id="m-settings">
+<div class="modal">
+  <button class="mclose" onclick="closeM('m-settings')">✕</button>
+  <h2>Settings</h2>
+  <p>Customise your Revise experience</p>
+  <div class="srow">
+    <div><div class="slabel">Dark Mode</div><div class="ssub">Toggle dark / light theme</div></div>
+    <label class="tswitch"><input type="checkbox" id="dark-tog" onchange="setTheme(this.checked)"><span class="tslider"></span></label>
+  </div>
+  <div class="srow">
+    <div><div class="slabel">Spaced Repetition</div><div class="ssub">SM-2 review controls on flashcards</div></div>
+    <label class="tswitch"><input type="checkbox" id="sr-tog" checked onchange="srEnabled=this.checked"><span class="tslider"></span></label>
+  </div>
+  <div class="srow" id="settings-account-row">
+    <div><div class="slabel" id="settings-email-lbl" style="color:var(--muted);font-size:13px">Not signed in</div></div>
+    <button class="nbtn" id="settings-auth-btn" onclick="settingsAuthAction()">Sign in</button>
+  </div>
+</div>
+</div>
+
+<!-- SAVE SET MODAL -->
+<div class="overlay hidden" id="m-save">
+<div class="modal" style="max-width:350px">
+  <button class="mclose" onclick="closeM('m-save')">✕</button>
+  <h2>Save Set</h2>
+  <p>Give this flashcard set a name</p>
+  <div class="fg"><label>Set Name</label><input class="finput" type="text" id="save-name" placeholder="e.g. Cell Division — Biology" onkeydown="if(event.key==='Enter')doSaveSet()"></div>
+  <button class="fbtn" onclick="doSaveSet()">Save Set</button>
+</div>
+</div>
+
+<!-- PROGRESS MODAL -->
+<div class="overlay hidden" id="m-progress">
+<div class="modal" style="max-width:560px">
+  <button class="mclose" onclick="closeM('m-progress')">✕</button>
+  <h2>Your Progress</h2>
+  <p>Track your revision journey and stay on target</p>
+
+  <!-- DAILY GOAL RING -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Today's Goal</div>
+    <div class="goal-ring-wrap">
+      <div class="goal-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="6"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="6"
+            stroke-dasharray="163" id="goal-ring-circle" stroke-dashoffset="163" stroke-linecap="round"/>
+        </svg>
+        <div class="goal-ring-text">
+          <div class="goal-ring-pct" id="goal-ring-pct">0%</div>
+          <div class="goal-ring-sub">done</div>
+        </div>
+      </div>
+      <div class="goal-info">
+        <div class="goal-title" id="goal-title">Complete 3 revision sessions today</div>
+        <div class="goal-sub" id="goal-sub">0 of 3 done · <span style="color:var(--accent);cursor:pointer" onclick="showGoalSettings()">Change goal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="streak-fire">🔥</div>
+      <div class="prog-val" id="prog-streak">0</div>
+      <div class="prog-label">Day Streak</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">📚</div>
+      <div class="prog-val" id="prog-total">0</div>
+      <div class="prog-label">Total Sessions</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">🃏</div>
+      <div class="prog-val" id="prog-cards">0</div>
+      <div class="prog-label">Cards Created</div>
+    </div>
+    <div class="prog-card">
+      <div class="streak-fire">🎯</div>
+      <div class="prog-val" id="prog-quiz">0</div>
+      <div class="prog-label">Questions Answered</div>
+    </div>
+  </div>
+
+  <!-- WEEKLY ACTIVITY -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">This Week</div>
+    <div class="mini-chart" id="weekly-chart"></div>
+    <div class="chart-labels" id="weekly-labels"></div>
+  </div>
+
+  <!-- STREAK CALENDAR -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Last 7 Days</div>
+    <div class="streak-row" id="streak-row"></div>
+  </div>
+
+  <!-- SUBJECT PROGRESS -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Subject Breakdown</div>
+    <div class="subj-prog-list" id="subj-prog-list">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate some flashcards to see subject progress</div>
+    </div>
+  </div>
+
+  <!-- EXAM COUNTDOWN -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Exam Countdowns</div>
+    <div class="exam-add">
+      <input type="text" id="exam-name-input-old" placeholder="Exam name e.g. Biology Paper 1">
+      <input type="date" id="exam-date-input-old" style="width:130px">
+      <button onclick="addExam()">+ Add</button>
+    </div>
+    <div class="exam-list" id="exam-list">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">No exams added yet</div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="prog-card" style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Achievement Badges</div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+
+  <!-- REVISION TIMETABLE -->
+  <div class="prog-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Revision Timetable</div>
+      <button onclick="generateTimetable()" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 11px;font-family:var(--ff);font-size:11px;cursor:pointer">Auto-Generate</button>
+    </div>
+    <div id="timetable-wrap">
+      <div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Click Auto-Generate to create a personalised revision plan</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="logo"><span class="logo-dot"></span>Revise AI</div>
+  <div class="nav-right">
+    <span id="nav-usage" style="display:none"></span>
+    <span id="nav-badge"></span>
+    <button class="nbtn accent" id="upgrade-nav-btn" onclick="openPaywall('nav')" style="display:none">⭐ Go Pro — £4.99/mo</button>
+    <button class="nbtn" onclick="openSettings()">⚙️</button>
+    <button class="nbtn" id="auth-nav-btn" onclick="openAuth()">Sign in</button>
+  </div>
+</nav>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="sh3">Level</div>
+      <div class="level-toggle">
+        <button class="lvl-btn" onclick="setLevel('GCSE',this)">GCSE</button>
+        <button class="lvl-btn active" onclick="setLevel('A-Level',this)">A-Level</button>
+      </div>
+    </div>
+    <div>
+      <div class="sh3">Subject</div>
+      <input class="subj-search" type="text" id="subj-search" placeholder="Search subjects…" oninput="renderSubjs(this.value)">
+      <div class="subj-cats" id="subj-cats"></div>
+    </div>
+    <div>
+      <div class="sh3">Exam Board</div>
+      <select class="esel" id="esel" onchange="examBoard=this.value;document.getElementById('sp-board').textContent=this.value">
+        <option>AQA</option><option>Edexcel</option><option>OCR</option><option>WJEC</option><option>Cambridge (CAIE)</option><option>Eduqas</option>
+      </select>
+    </div>
+    <div class="sel-pill" id="sel-pill" style="cursor:pointer" onclick="switchTab('study')" title="Click to go back to study">
+      <span class="sp-level" id="sp-level">A-Level</span><span class="sp-sep">·</span>
+      <span class="sp-sub" id="sp-sub">Biology</span><span class="sp-sep">·</span>
+      <span class="sp-board" id="sp-board">AQA</span>
+      <span style="font-size:10px;color:var(--accent);margin-left:4px">→ Study</span>
+    </div>
+    <div class="free-banner" id="pro-banner" onclick="openPaywall('banner')">
+      <h4>⭐ Upgrade to Pro</h4>
+      <div class="usage-bar-bg"><div class="usage-bar-fill" id="usage-fill" style="width:0%"></div></div>
+      <p id="banner-txt">10 free generations per day.</p>
+      <button class="upgrade-cta" onclick="event.stopPropagation();openPaywall('banner')">Upgrade — £4.99/mo</button>
+    </div>
+    <div>
+      <div class="sh3">Study Mode</div>
+      <div class="mode-list">
+        <button class="mbtn active" onclick="setMode('flashcards',this)">
+          <span class="micon">🃏</span><div><div class="mlabel">Flashcards</div><div class="msub">Q&A from your notes</div></div>
+        </button>
+        <button class="mbtn" onclick="setMode('quiz',this)">
+          <span class="micon">🎯</span><div><div class="mlabel">Practice Quiz</div><div class="msub">MCQs with explanations</div></div>
+        </button>
+        <button class="mbtn" id="mode-essay" onclick="handleProMode('essay',this)">
+          <span class="micon">✍️</span><div><div class="mlabel">Essay Feedback</div><div class="msub">Mark scheme analysis</div></div>
+          <span class="pro-lock" id="essay-lock">PRO</span>
+        </button>
+        <button class="mbtn" onclick="setMode('summary',this)">
+          <span class="micon">📋</span><div><div class="mlabel">Key Points</div><div class="msub">Concise revision notes</div></div>
+        </button>
+        <button class="mbtn" onclick="setMode('notes',this)">
+          <span class="micon">📝</span><div><div class="mlabel">Study Notes</div><div class="msub">Full written notes from your text</div></div>
+        </button>
+      </div>
+    </div>
+    <div>
+      <div class="sh3">Saved Sets <span id="save-lock" style="font-size:10px;color:var(--amber);font-weight:600;margin-left:4px">PRO</span></div>
+      <div class="sets-list" id="sets-list"><div class="empty-sets">Sign in & upgrade to save sets</div></div>
+    </div>
+    <div>
+      <div class="sh3">Session Stats</div>
+      <div class="stats-row">
+        <div class="scard"><div class="scard-val" id="stat-cards">0</div><div class="scard-label">Cards made</div></div>
+        <div class="scard"><div class="scard-val" id="stat-quiz">0</div><div class="scard-label">Questions done</div></div>
+      </div>
+      <div class="stats-row" style="margin-top:6px">
+        <div class="scard" style="cursor:pointer" onclick="openProgress()"><div class="scard-val" id="stat-streak">🔥 0</div><div class="scard-label">Day streak</div></div>
+        <div class="scard" style="cursor:pointer" onclick="openProgress()"><div class="scard-val" id="stat-total-gen">0</div><div class="scard-label">Total sessions</div></div>
+      </div>
+      <button onclick="openProgress()" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px;font-family:var(--ff);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;margin-top:4px" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📊 View Full Progress Dashboard</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" style="overflow:hidden;display:flex;flex-direction:column">
+
+    <!-- TOP TABS -->
+    <div class="app-tabs">
+      <button class="app-tab active" id="tab-study" onclick="switchTab('study')">✦ Study</button>
+      <button class="app-tab" id="tab-progress" onclick="switchTab('progress')">📊 Progress</button>
+    </div>
+
+    <!-- STUDY TAB -->
+    <div class="tab-panel active" id="panel-study" style="overflow:hidden;min-height:0">
+      <div class="ipanel">
+        <h2 id="study-heading">Paste your notes, <em>get smarter.</em></h2>
+        <p id="study-subheading">Add text, upload a PDF, or take a photo of your notes</p>
+
+        <!-- ESSAY EXTRA FIELDS - shown only in essay mode -->
+        <div id="essay-fields" style="display:none;margin-bottom:8px">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:7px">
+            <div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500">Exam question</div>
+              <input type="text" id="essay-question" placeholder="e.g. Explain the causes of World War One" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 11px;color:var(--text);font-family:var(--ff);font-size:13px">
+            </div>
+            <div style="width:80px">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500">Marks</div>
+              <select id="essay-marks" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 9px;color:var(--text);font-family:var(--ff);font-size:13px;appearance:none;cursor:pointer">
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+                <option value="12">12</option>
+                <option value="16" selected>16</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="upload-row">
+          <label class="upbtn" id="pdf-lbl" onclick="checkProFeature(event,'upload')">
+            📎 Upload PDF / Image <span class="lock" id="pdf-lock">⭐</span>
+            <input type="file" id="file-input" accept=".pdf,image/*" style="display:none" onchange="handleFile(this)">
+          </label>
+          <label class="upbtn" id="cam-lbl" onclick="checkProFeature(event,'upload')">
+            📷 Camera <span class="lock" id="cam-lock">⭐</span>
+            <input type="file" id="img-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this)">
+          </label>
+        </div>
+        <div class="upload-status" id="upstatus"><div class="spin"></div><span id="upmsg">Extracting text…</span></div>
+        <textarea id="notes" placeholder="e.g. The cell cycle consists of interphase and mitotic phase…"></textarea>
+        <div class="chips">
+          <span style="font-size:11px;color:var(--muted);padding:4px 0">Try a sample:</span>
+          <span class="chip" onclick="loadSample('bio')">Cell Division</span>
+          <span class="chip" onclick="loadSample('hist')">WW1 Causes</span>
+          <span class="chip" onclick="loadSample('chem')">Moles & Equations</span>
+          <span class="chip" onclick="loadSample('physics')">Newton's Laws</span>
+          <span class="chip" onclick="loadSample('psych')">Memory Models</span>
+          <span class="chip" onclick="loadSample('econ')">Supply & Demand</span>
+        </div>
+        <div class="count-selector" id="count-selector">
+          <span class="count-label" id="count-label">Number of cards:</span>
+          <div class="count-btns" id="count-btns">
+            <button class="cbtn" onclick="setCount(4,this)">4</button>
+            <button class="cbtn active" onclick="setCount(6,this)">6</button>
+            <button class="cbtn" onclick="setCount(8,this)">8</button>
+            <button class="cbtn" onclick="setCount(10,this)">10</button>
+            <button class="cbtn" onclick="setCount(12,this)">12</button>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="gen-btn" id="gen-btn" onclick="generate()"><span id="gen-txt">✦ Generate</span></button>
+          <span class="ccount" id="ccount">0 characters</span>
+        </div>
+        <button class="results-toggle" id="results-toggle" onclick="toggleInputCollapse()">
+          ▼ Show results
+        </button>
+      </div>
+      <div class="rpanel" id="results">
+        <div class="empty">
+          <div class="empty-icon">✦</div>
+          <h3>Ready when you are</h3>
+          <p>Paste your notes above and choose a study mode to get started</p>
+        </div>
+      </div>
+    </div>
+
+        <!-- PROGRESS TAB -->
+    <div class="tab-panel" id="panel-progress">
+      <div class="prog-panel" id="prog-panel-content">
+        <div class="prog-top-row">
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-streak">🔥 0</div><div class="prog-mini-label">Day Streak</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-sessions">0</div><div class="prog-mini-label">Total Sessions</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-cards">0</div><div class="prog-mini-label">Cards Made</div></div>
+          <div class="prog-mini"><div class="prog-mini-val" id="pg-quiz">0</div><div class="prog-mini-label">Quiz Answers</div></div>
+        </div>
+
+        <!-- DAILY GOAL -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Today's Goal</div>
+          <div class="goal-ring-wrap">
+            <div class="goal-ring">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="6"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="6"
+                  stroke-dasharray="163" id="goal-ring-circle" stroke-dashoffset="163" stroke-linecap="round"/>
+              </svg>
+              <div class="goal-ring-text">
+                <div class="goal-ring-pct" id="goal-ring-pct">0%</div>
+                <div class="goal-ring-sub">done</div>
+              </div>
+            </div>
+            <div class="goal-info">
+              <div class="goal-title" id="goal-title-prog">Complete 3 revision sessions today</div>
+              <div id="goal-sub-prog" style="font-size:11px;color:var(--muted)">0 of 3 done</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEEKLY CHART -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">This Week</div>
+          <div class="mini-chart" id="prog-weekly-chart"></div>
+          <div class="chart-labels" id="prog-weekly-labels"></div>
+          <div class="streak-row" id="prog-streak-row" style="margin-top:10px"></div>
+        </div>
+
+        <!-- SUBJECT BREAKDOWN -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Subject Breakdown</div>
+          <div id="prog-subj-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate flashcards to see subject progress</div></div>
+        </div>
+
+        <!-- EXAM COUNTDOWNS -->
+        <div class="prog-card" style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Exam Countdowns</div>
+          <div class="exam-input-row">
+            <input type="text" id="exam-name-input" placeholder="e.g. Biology Paper 1 — 16 June">
+            <input type="date" id="exam-date-input">
+            <button class="add-btn" onclick="addExam()">+ Add Exam</button>
+          </div>
+          <div class="exam-cards-wrap" id="exams-list-main"></div>
+        </div>
+
+        <!-- BADGES -->
+        <div class="prog-card">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Achievements</div>
+          <div class="badges-grid" id="prog-badges-grid"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SB_URL  = 'https://mdzclrqiqpejigzbwymj.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kemNscnFpcXBlamlnemJ3eW1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxODEyMTYsImV4cCI6MjA5NDc1NzIxNn0.34v6CA7H-UxpQyg0So_gSH9uCthtAeOZ42Tf_RJwClg';
+const STRIPE_PK = 'pk_live_51TJDhdFQrs54wu3KpMYYxYSJBPJlQX7PWdIJRgV0YxRPhxryEueGWPwHHpG0rFFZ8pgJDiDtHZY20x5gfU0J4zqz00eaeY9crn';
+const API_BASE = '';
+let stripeInstance = null;
+let checkoutInstance = null;
+const FREE_MAX = 10;
+
+// ─── LIBRARY INIT (safe, deferred) ─────────────────────────────────────────
+let sb = null;
+function initSupabase() {
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SB_URL, SB_KEY);
+      sb.auth.onAuthStateChange(async (_evt, session) => {
+        if (session && session.user) {
+          currentUser = session.user;
+          localStorage.setItem('sb_user', JSON.stringify(currentUser));
+          await loadProfile();
+        }
+      });
+    }
+  } catch(e) { console.warn('Supabase init error', e); }
+  // Restore session from localStorage — works on Safari and all browsers
+  restoreSession();
+}
+
+async function restoreSession() {
+  try {
+    const token = localStorage.getItem('sb_access_token');
+    const refresh = localStorage.getItem('sb_refresh_token');
+    const savedUser = localStorage.getItem('sb_user');
+    if (token && savedUser) {
+      currentUser = JSON.parse(savedUser);
+      // Show basic UI immediately
+      refreshUI();
+      // Try to restore Supabase session
+      if (sb && token) {
+        try {
+          const { data } = await sb.auth.setSession({ access_token: token, refresh_token: refresh || '' });
+          if (data && data.user) currentUser = data.user;
+        } catch(e) {}
+      }
+      // Always load fresh profile from DB — ensures Pro status is current
+      await loadProfile();
+    } else {
+      refreshUI();
+    }
+  } catch(e) {
+    refreshUI();
+  }
+}
+
+// pdf.js
+function initPDF() {
+  try {
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  } catch(e) {}
+}
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let subject = 'Biology', level = 'A-Level', examBoard = 'AQA', mode = 'flashcards';
+let statCards = 0, statQuiz = 0;
+let authMode = 'signin';
+let currentUser = null, userProfile = null;
+let currentCards = null;
+let srEnabled = true;
+let savedSets = [];
+let cardProgress = {};
+let freeUsed = parseInt(localStorage.getItem('freeUsed')||'0');
+
+// ─── PREMIUM CHECK ──────────────────────────────────────────────────────────
+function isPro() { return userProfile && userProfile.is_premium === true; }
+function canGenerate() { return isPro() || freeUsed < FREE_MAX; }
+function canUseProFeature() { return isPro(); }
+
+// ─── SUBJECTS ───────────────────────────────────────────────────────────────
+const SD = {
+  'Sciences':[{n:'Biology',i:'🧬'},{n:'Chemistry',i:'⚗️'},{n:'Physics',i:'⚛️'},{n:'Combined Science',i:'🔬',g:1},{n:'Environmental Science',i:'🌍'},{n:'Astronomy',i:'🔭',a:1},{n:'Geology',i:'🪨',a:1}],
+  'Mathematics':[{n:'Mathematics',i:'∑'},{n:'Further Maths',i:'∞',a:1},{n:'Statistics',i:'📊'}],
+  'Humanities':[{n:'History',i:'📜'},{n:'Geography',i:'🗺️'},{n:'Religious Studies',i:'☯️'},{n:'Citizenship',i:'🏛️',g:1},{n:'Classical Civilisation',i:'🏺'},{n:'Archaeology',i:'⛏️',a:1},{n:'Philosophy',i:'💭',a:1}],
+  'Languages':[{n:'English Language',i:'📖'},{n:'English Literature',i:'✒️'},{n:'French',i:'🇫🇷'},{n:'Spanish',i:'🇪🇸'},{n:'German',i:'🇩🇪'},{n:'Italian',i:'🇮🇹',a:1},{n:'Mandarin',i:'🇨🇳'},{n:'Latin',i:'🏛️'},{n:'Arabic',i:'🌙',a:1}],
+  'Social Sciences':[{n:'Psychology',i:'🧠'},{n:'Sociology',i:'👥'},{n:'Economics',i:'📈',a:1},{n:'Politics',i:'🗳️',a:1},{n:'Law',i:'⚖️',a:1},{n:'Criminology',i:'🔍',a:1}],
+  'Arts & Media':[{n:'Art & Design',i:'🎨'},{n:'Photography',i:'📷'},{n:'Graphic Design',i:'🖌️'},{n:'Drama',i:'🎭'},{n:'Music',i:'🎵'},{n:'Media Studies',i:'📺'},{n:'Film Studies',i:'🎬',a:1}],
+  'Technology':[{n:'Computer Science',i:'💻'},{n:'Design & Technology',i:'⚙️'},{n:'Food Technology',i:'🍽️'},{n:'ICT',i:'🖥️',g:1},{n:'Electronics',i:'🔌',a:1}],
+  'Business':[{n:'Business Studies',i:'💼'},{n:'Accounting',i:'🧾',a:1},{n:'Economics & Business',i:'💰',g:1}],
+  'PE & Health':[{n:'Physical Education',i:'🏃'},{n:'Sports Science',i:'⚽',a:1},{n:'Health & Social Care',i:'🏥'},{n:'Child Development',i:'👶',g:1}],
+};
+
+function renderSubjs(f='') {
+  const c = document.getElementById('subj-cats'); c.innerHTML = '';
+  const fl = f.toLowerCase();
+  Object.entries(SD).forEach(([cat, subs]) => {
+    const list = subs.filter(s => {
+      if (level==='GCSE' && s.a) return false;
+      if (level==='A-Level' && s.g) return false;
+      return !fl || s.n.toLowerCase().includes(fl);
+    });
+    if (!list.length) return;
+    const d = document.createElement('div');
+    d.innerHTML = `<div class="scat-label">${cat}</div><div class="scat-grid">${list.map(s=>`<button class="sbtn${s.n===subject?' active':''}" onclick="pickSubject('${s.n.replace(/'/g,"\\'")}',this)"><span class="si">${s.i}</span>${s.n}</button>`).join('')}</div>`;
+    c.appendChild(d);
+  });
+}
+function pickSubject(s,btn) {
+  subject=s;
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sp-sub').textContent=s;
+}
+function setLevel(l,btn) {
+  level=l;
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sp-level').textContent=l;
+  renderSubjs(document.getElementById('subj-search').value);
+}
+var modeInputs={};
+function setMode(m,btn) {
+  var ta=document.getElementById('notes');
+  if(ta) modeInputs[mode]=ta.value;
+  mode=m;
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCountSelector();
+  switchTab('study');
+  if(ta){
+    ta.value=modeInputs[m]!==undefined?modeInputs[m]:'';
+    var cc=document.getElementById('ccount');
+    if(cc) cc.textContent=ta.value.length+' characters';
+  }
+}
+function updateCountSelector() {
+  const cs = document.getElementById('count-selector');
+  const lbl = document.getElementById('count-label');
+  if (!cs) return;
+  if (mode==='flashcards') {
+    cs.style.display='flex'; lbl.textContent='Number of cards:';
+    window.selectedCount = window.selectedCount || 6;
+  } else if (mode==='quiz') {
+    cs.style.display='flex'; lbl.textContent='Number of questions:';
+    window.selectedCount = window.selectedCount || 4;
+  } else {
+    cs.style.display='none';
+  }
+  if (mode==='notes') {
+    var h=document.getElementById('study-heading'); if(h) h.innerHTML='Generate <em>study notes.</em>';
+    var sh=document.getElementById('study-subheading'); if(sh) sh.textContent='Paste your raw notes or text — get clear, structured study notes back';
+    var na=document.getElementById('notes'); if(na) na.placeholder='Paste your text, rough notes, or a topic to get structured notes…';
+  }
+  showEssayUI();
+}
+
+function showEssayUI() {
+  const ef = document.getElementById('essay-fields');
+  const heading = document.getElementById('study-heading');
+  const subheading = document.getElementById('study-subheading');
+  const notesEl = document.getElementById('notes');
+  if (!ef) return;
+  if (mode === 'essay') {
+    ef.style.display = 'block';
+    if(heading) heading.innerHTML = 'Essay Feedback <em>— get marked.</em>';
+    if(subheading) subheading.textContent = 'Enter the exam question, marks, and paste your essay answer below';
+    if(notesEl) notesEl.placeholder = 'Paste your essay answer here…';
+  } else if (mode === 'notes') {
+    ef.style.display = 'none';
+  } else {
+    ef.style.display = 'none';
+    if(heading) heading.innerHTML = 'Paste your notes, <em>get smarter.</em>';
+    if(subheading) subheading.textContent = 'Add text, upload a PDF, or take a photo of your notes';
+    if(notesEl) notesEl.placeholder = 'e.g. The cell cycle consists of interphase and mitotic phase…';
+  }
+}
+function setCount(n, btn) {
+  window.selectedCount = n;
+  document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function handleProMode(m,btn) {
+  if (!canUseProFeature()) { openPaywall('Essay Feedback is a Pro feature'); return; }
+  mode=m;
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCountSelector();
+  switchTab('study');
+  // Show essay UI
+  showEssayUI();
+}
+
+// ─── THEME ──────────────────────────────────────────────────────────────────
+function setTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
+  localStorage.setItem('theme', dark?'dark':'light');
+}
+(()=>{
+  const t=localStorage.getItem('theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  setTimeout(()=>{ const tog=document.getElementById('dark-tog'); if(tog) tog.checked=(t==='dark'); },50);
+})();
+
+// ─── SETTINGS ───────────────────────────────────────────────────────────────
+function openSettings() {
+  const lbl=document.getElementById('settings-email-lbl');
+  const btn=document.getElementById('settings-auth-btn');
+  if (currentUser) {
+    lbl.textContent=currentUser.email;
+    btn.textContent='Sign out';
+    btn.style.color='var(--red)';
+    btn.style.borderColor='rgba(239,68,68,.3)';
+  } else {
+    lbl.textContent='Not signed in';
+    btn.textContent='Sign in';
+    btn.style.color='';
+    btn.style.borderColor='';
+  }
+  openM('m-settings');
+}
+function settingsAuthAction() {
+  closeM('m-settings');
+  if (currentUser) { doSignOut(); } else { openAuth(); }
+}
+
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+function openAuth() { openM('m-auth'); }
+
+async function signInWithProvider(provider) {
+  if (!sb) { toast('Auth not ready, please try again','error'); return; }
+  const err = document.getElementById('auth-err');
+  err.classList.remove('show');
+  try {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: provider,
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) { err.textContent = error.message; err.classList.add('show'); }
+  } catch(e) {
+    err.textContent = e.message; err.classList.add('show');
+  }
+}
+function toggleAuthMode() {
+  authMode = authMode==='signin' ? 'signup' : 'signin';
+  const s = authMode==='signup';
+  document.getElementById('auth-title').textContent = s ? 'Create account' : 'Welcome back';
+  document.getElementById('auth-sub').textContent = s ? 'Start revising smarter for free' : 'Sign in to access your account';
+  document.getElementById('auth-btn').textContent = s ? 'Create Account' : 'Sign In';
+  document.getElementById('a-switch-txt').textContent = s ? 'Already have an account?' : "Don't have an account?";
+  document.getElementById('a-switch-lnk').textContent = s ? 'Sign in' : 'Sign up free';
+  document.getElementById('a-confirm-group').style.display = s ? 'block' : 'none';
+  document.getElementById('auth-err').classList.remove('show');
+}
+async function handleAuth() {
+  const email = document.getElementById('a-email').value.trim();
+  const pw = document.getElementById('a-pw').value;
+  const err = document.getElementById('auth-err');
+  const btn = document.getElementById('auth-btn');
+  err.classList.remove('show');
+  if (!email||!pw) { err.textContent='Please fill in all fields'; err.classList.add('show'); return; }
+  if (authMode==='signup') {
+    const c=document.getElementById('a-confirm').value;
+    if (pw!==c) { err.textContent='Passwords do not match'; err.classList.add('show'); return; }
+  }
+  btn.disabled=true; btn.textContent='Please wait…';
+  try {
+    const res = await fetch(API_BASE+'/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: authMode, email, password: pw })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Authentication failed');
+
+    // Build user object from response
+    const user = data.user || { id: data.id || data.user_id, email };
+    currentUser = user;
+
+    // Save to localStorage so it persists across page loads on all browsers
+    localStorage.setItem('sb_access_token', data.access_token || '');
+    localStorage.setItem('sb_refresh_token', data.refresh_token || '');
+    localStorage.setItem('sb_user', JSON.stringify(currentUser));
+
+    // Close modal and update UI immediately — don't wait for Supabase
+    closeM('m-auth');
+    toast(authMode==='signup' ? '✓ Account created!' : '✓ Signed in!', 'success');
+    btn.disabled=false;
+    btn.textContent=authMode==='signup'?'Create Account':'Sign In';
+
+    // Load profile in background
+    loadProfile().catch(()=>{});
+    return;
+  } catch(e) { err.textContent=e.message||'Something went wrong'; err.classList.add('show'); }
+  btn.disabled=false; btn.textContent=authMode==='signup'?'Create Account':'Sign In';
+}
+async function doSignOut() {
+  // Clear everything from localStorage first
+  localStorage.clear();
+  // Sign out from Supabase
+  if (sb) { try { await sb.auth.signOut(); } catch(e) {} }
+  // Reset all state
+  currentUser=null; userProfile=null;
+  savedSets=[]; cardProgress={}; freeUsed=0;
+  // Close any open modals safely
+  try { closeM('m-settings'); } catch(e) {}
+  try { document.getElementById('mob-drawer').classList.remove('open'); } catch(e) {}
+  // Reload the page — cleanest possible sign out on all browsers
+  window.location.reload();
+}
+
+// ─── PROFILE ────────────────────────────────────────────────────────────────
+async function loadProfile() {
+  if (!currentUser) { refreshUI(); return; }
+  // Set basic profile immediately so UI shows something
+  if (!userProfile) {
+    userProfile = {id:currentUser.id, email:currentUser.email, is_premium:false, free_generates_used:0};
+  }
+  refreshUI();
+  // Fetch real profile via our backend — works on ALL browsers including Safari
+  try {
+    const token = localStorage.getItem('sb_access_token') || '';
+    const res = await fetch(API_BASE+'/api/profile', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId: currentUser.id, token })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.profile) {
+        userProfile = data.profile;
+        freeUsed = data.profile.free_generates_used || 0;
+        localStorage.setItem('freeUsed', freeUsed);
+      }
+    }
+  } catch(e) {
+    // Keep basic profile on error
+  }
+  refreshUI();
+  loadSets().catch(()=>{});
+}
+
+// ─── UI REFRESH ──────────────────────────────────────────────────────────────
+function refreshUI() {
+  const authBtn = document.getElementById('auth-nav-btn');
+  const badge = document.getElementById('nav-badge');
+  const upgradeBtn = document.getElementById('upgrade-nav-btn');
+  const navUsage = document.getElementById('nav-usage');
+  const banner = document.getElementById('pro-banner');
+  const saveLock = document.getElementById('save-lock');
+  const essayLock = document.getElementById('essay-lock');
+
+  if (currentUser) {
+    authBtn.textContent = currentUser.email.split('@')[0];
+    if (isPro()) {
+      badge.innerHTML = '<span class="pro-badge">⭐ Pro</span>';
+      upgradeBtn.style.display='none';
+      navUsage.style.display='none';
+      banner.style.display='none';
+      saveLock.style.display='none';
+      essayLock.style.display='none';
+      document.getElementById('pdf-lock').style.display='none';
+      document.getElementById('cam-lock').style.display='none';
+    } else {
+      badge.innerHTML = '<span class="free-pill">Free — <b>'+(FREE_MAX-freeUsed)+' left</b></span>';
+      upgradeBtn.style.display='inline-flex';
+      navUsage.style.display='none';
+      showBanner();
+    }
+  } else {
+    authBtn.textContent='Sign in';
+    badge.innerHTML='';
+    upgradeBtn.style.display='none';
+    const rem=FREE_MAX-freeUsed;
+    if (freeUsed>0) { navUsage.textContent=rem+' free left'; navUsage.style.display='inline'; }
+    else navUsage.style.display='none';
+    showBanner();
+  }
+
+  // update SR toggle based on pro
+  const srTog=document.getElementById('sr-tog');
+  if (srTog && !isPro()) { srTog.checked=false; srEnabled=false; }
+}
+
+function showBanner() {
+  const banner=document.getElementById('pro-banner');
+  const fill=document.getElementById('usage-fill');
+  const txt=document.getElementById('banner-txt');
+  banner.style.display='block';
+  const pct=Math.min(100,Math.round(freeUsed/FREE_MAX*100));
+  fill.style.width=pct+'%';
+  fill.style.background=freeUsed>=FREE_MAX?'var(--red)':'var(--accent)';
+  const rem=FREE_MAX-freeUsed;
+  txt.textContent=freeUsed>=FREE_MAX
+    ? "You've used all free generations today. Upgrade for unlimited access to every feature."
+    : `${rem} of ${FREE_MAX} free generations remaining today. Upgrade for unlimited access, saving, spaced repetition, and more.`;
+}
+
+// ─── PAYWALL & EMBEDDED CHECKOUT ────────────────────────────────────────────
+function openPaywall(reason) {
+  const r=document.getElementById('pw-reason');
+  if (typeof reason==='string' && reason.length<80) r.textContent=reason;
+  else r.textContent='Upgrade for unlimited access to every feature';
+  showPlans();
+  openM('m-paywall');
+}
+function closePaywall() {
+  closeM('m-paywall');
+  if (checkoutInstance){try{checkoutInstance.destroy();}catch(e){} checkoutInstance=null;}
+  showPlans();
+}
+function showPlans() {
+  document.getElementById('pw-plans').style.display='block';
+  document.getElementById('pw-checkout').style.display='none';
+  document.getElementById('pw-success').style.display='none';
+}
+function showSuccess() {
+  document.getElementById('pw-plans').style.display='none';
+  document.getElementById('pw-checkout').style.display='none';
+  document.getElementById('pw-success').style.display='block';
+}
+async function startCheckout() {
+  if (!currentUser){closeM('m-paywall');toast('Please sign in first','error');openAuth();return;}
+  document.getElementById('pw-plans').style.display='none';
+  document.getElementById('pw-checkout').style.display='block';
+  document.getElementById('checkout-loading').style.display='flex';
+  document.getElementById('stripe-checkout-container').innerHTML='';
+  try {
+    if (!stripeInstance){await loadStripeJS();stripeInstance=Stripe(STRIPE_PK);}
+    const res=await fetch(API_BASE+'/api/create-checkout',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:currentUser.email,userId:currentUser.id})
+    });
+    if (!res.ok) throw new Error('Could not create checkout session');
+    const {clientSecret}=await res.json();
+    document.getElementById('checkout-loading').style.display='none';
+    checkoutInstance=await stripeInstance.initEmbeddedCheckout({clientSecret});
+    checkoutInstance.mount('#stripe-checkout-container');
+    pollPaymentStatus(clientSecret);
+  } catch(e) {
+    document.getElementById('checkout-loading').innerHTML=
+      '<p style="color:var(--red);font-size:13px">Could not load checkout: '+e.message+'</p>'+
+      '<button class="fbtn" style="margin-top:10px" onclick="showPlans()">Go back</button>';
+    console.error('Checkout error:',e);
+  }
+}
+function loadStripeJS() {
+  return new Promise((resolve,reject)=>{
+    if (window.Stripe){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://js.stripe.com/v3/';
+    s.onload=resolve;
+    s.onerror=()=>reject(new Error('Failed to load Stripe.js'));
+    document.head.appendChild(s);
+  });
+}
+async function pollPaymentStatus(clientSecret) {
+  const sid=clientSecret.split('_secret_')[0];
+  const interval=setInterval(async()=>{
+    try {
+      const res=await fetch(API_BASE+'/api/verify-payment',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({sessionId:sid,userId:currentUser?.id})
+      });
+      if (!res.ok) return;
+      const data=await res.json();
+      if (data.success){
+        clearInterval(interval);
+        if (userProfile) userProfile.is_premium=true;
+        refreshUI(); loadSets();
+        if (checkoutInstance){try{checkoutInstance.destroy();}catch(e){} checkoutInstance=null;}
+        showSuccess();
+        toast('You are now Pro!','success');
+      }
+    } catch(e){}
+  },3000);
+  setTimeout(()=>clearInterval(interval),900000);
+}
+async function checkReturnPayment() {
+  const params=new URLSearchParams(window.location.search);
+  const sessionId=params.get('session_id');
+  const payment=params.get('payment');
+  if (payment==='success'&&sessionId&&currentUser){
+    try {
+      const res=await fetch(API_BASE+'/api/verify-payment',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({sessionId,userId:currentUser.id})
+      });
+      const data=await res.json();
+      if (data.success&&userProfile){userProfile.is_premium=true;refreshUI();loadSets();toast('Welcome to Pro!','success');}
+    } catch(e){}
+    window.history.replaceState({},'',window.location.pathname);
+  }
+}
+
+function checkProFeature(e,feat) {
+  if (!isPro()) { e.preventDefault(); openPaywall(feat+' is a Pro feature'); }
+}
+
+// ─── PRO LABEL helpers ───────────────────────────────────────────────────────
+function openProOrAction(feat,action) {
+  if (!isPro()) { openPaywall(feat+' is a Pro feature'); return false; }
+  return true;
+}
+
+// ─── SAVED SETS ─────────────────────────────────────────────────────────────
+async function loadSets() {
+  if (!sb||!currentUser||!isPro()) return;
+  try {
+    const {data} = await sb.from('flashcard_sets').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+    savedSets=data||[];
+    renderSets();
+  } catch(e) {}
+}
+function renderSets() {
+  const list=document.getElementById('sets-list');
+  if (!isPro()) { list.innerHTML='<div class="empty-sets">Pro feature — upgrade to save sets</div>'; return; }
+  if (!currentUser) { list.innerHTML='<div class="empty-sets">Sign in to save sets</div>'; return; }
+  if (!savedSets.length) { list.innerHTML='<div class="empty-sets">No saved sets yet</div>'; return; }
+  list.innerHTML=savedSets.map(s=>`
+    <div class="set-item" onclick="loadSet('${s.id}')">
+      <div style="flex:1;min-width:0">
+        <div class="set-title">${s.title}</div>
+        <div class="set-meta">${s.subject} · ${s.level} · ${s.cards.length} cards</div>
+      </div>
+      <button class="set-del" onclick="event.stopPropagation();deleteSet('${s.id}')">✕</button>
+    </div>`).join('');
+}
+function loadSet(id) {
+  const s=savedSets.find(x=>x.id===id); if(!s) return;
+  subject=s.subject; level=s.level; currentCards=s.cards;
+  document.getElementById('sp-sub').textContent=subject;
+  document.getElementById('sp-level').textContent=level;
+  renderCards(s.cards,s.id);
+  toast('Loaded: '+s.title,'success');
+}
+async function deleteSet(id) {
+  if (!sb) return;
+  await sb.from('flashcard_sets').delete().eq('id',id);
+  savedSets=savedSets.filter(s=>s.id!==id); renderSets();
+  toast('Set deleted','success');
+}
+function openSaveModal() {
+  if (!currentUser) { openAuth(); return; }
+  if (!isPro()) { openPaywall('Saving sets is a Pro feature'); return; }
+  const n=document.getElementById('save-name');
+  n.value=subject+' — '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  openM('m-save');
+}
+async function doSaveSet() {
+  if (!sb||!currentUser||!currentCards) return;
+  const title=document.getElementById('save-name').value.trim(); if(!title) return;
+  try {
+    const {data,error}=await sb.from('flashcard_sets').insert({user_id:currentUser.id,title,subject,level,cards:currentCards}).select().single();
+    if (!error) { savedSets.unshift(data); renderSets(); closeM('m-save'); toast('✓ Set saved!','success'); }
+    else throw error;
+  } catch(e) { toast('Could not save: '+e.message,'error'); }
+}
+
+// ─── SPACED REPETITION (SM-2) ────────────────────────────────────────────────
+async function loadProgress(setId) {
+  if (!sb||!currentUser) return;
+  try {
+    const {data}=await sb.from('card_progress').select('*').eq('set_id',setId).eq('user_id',currentUser.id);
+    cardProgress={};
+    (data||[]).forEach(r=>{ cardProgress[r.card_index]=r; });
+  } catch(e) {}
+}
+async function rateSR(setId,idx,q) {
+  // SM-2: quality 0=fail,3=ok,5=easy
+  let p=cardProgress[idx]||{ease_factor:2.5,interval_days:1,card_index:idx};
+  let {ease_factor:ef,interval_days:id_}=p;
+  if (q<3) { id_=1; }
+  else { id_=p.id?Math.round((id_===1?6:id_)*ef):1; ef=Math.max(1.3,ef+0.1-(5-q)*(0.08+(5-q)*0.02)); }
+  const next=new Date(Date.now()+id_*86400000).toISOString();
+  const rec={user_id:currentUser.id,set_id:setId,card_index:idx,ease_factor:ef,interval_days:id_,next_review:next,updated_at:new Date().toISOString()};
+  try {
+    if (p.id) { await sb.from('card_progress').update(rec).eq('id',p.id); cardProgress[idx]={...p,...rec}; }
+    else { const {data}=await sb.from('card_progress').insert(rec).select().single(); cardProgress[idx]=data||rec; }
+    const badge=document.getElementById('srbadge-'+idx);
+    const due=document.getElementById('srdue-'+idx);
+    if (badge){ badge.textContent=q<3?'📅 Soon':'📅 In '+id_+'d'; badge.className='sr-badge '+(q<3?'sr-due-now':'sr-ok'); }
+    if (due) due.textContent=q<3?'Review again soon':'Next review in '+id_+' day'+(id_>1?'s':'');
+  } catch(e) {}
+}
+
+// ─── FILE UPLOAD ────────────────────────────────────────────────────────────
+async function handleFile(inp) {
+  if (!isPro()) { openPaywall('File upload is a Pro feature'); inp.value=''; return; }
+  const file=inp.files[0]; if(!file) return;
+  const st=document.getElementById('upstatus'); st.style.display='flex';
+  const msg=document.getElementById('upmsg');
+  try {
+    let text='';
+    if (file.type==='application/pdf') {
+      if (!window.pdfjsLib) { throw new Error('PDF library not loaded'); }
+      msg.textContent='Reading PDF…';
+      const ab=await file.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+      for (let i=1;i<=Math.min(pdf.numPages,10);i++) {
+        const pg=await pdf.getPage(i);
+        const ct=await pg.getTextContent();
+        text+=ct.items.map(x=>x.str).join(' ')+'\n';
+      }
+    } else {
+      msg.textContent='Reading image with AI…';
+      const b64=await toB64(file);
+      const res=await fetch(API_BASE+'/api/generate',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:file.type,data:b64}},
+          {type:'text',text:'Extract all text from this image. Return only the extracted text.'}
+        ]}]})
+      });
+      const d=await res.json();
+      if (d.error) throw new Error(d.error.message);
+      text=d.content.map(x=>x.text||'').join('');
+    }
+    const ta=document.getElementById('notes');
+    ta.value=text.trim().slice(0,4000);
+    document.getElementById('ccount').textContent=ta.value.length+' characters';
+    st.style.display='none'; toast('✓ Text extracted!','success');
+  } catch(e) { st.style.display='none'; toast('Could not extract text — try copying manually','error'); }
+  inp.value='';
+}
+function toB64(file) {
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); });
+}
+
+// ─── TEXTAREA ────────────────────────────────────────────────────────────────
+const notesEl=document.getElementById('notes');
+notesEl.addEventListener('input',()=>{ document.getElementById('ccount').textContent=notesEl.value.length+' characters'; });
+
+// ─── SAMPLES ─────────────────────────────────────────────────────────────────
+const SAMPLES={
+  bio:`The cell cycle: Interphase (G1 growth, S DNA replication, G2 prep) then Mitotic phase. Mitosis stages: Prophase (chromosomes condense), Metaphase (align at equator), Anaphase (chromatids separate to poles), Telophase (nuclear envelopes reform), Cytokinesis (cytoplasm divides). Produces 2 genetically identical daughter cells. Cyclin-CDK complexes regulate checkpoints. Apoptosis = programmed cell death. Uncontrolled division = cancer. Meiosis produces 4 haploid cells, crossing over creates genetic variation.`,
+  hist:`WWI causes — MAIN: Militarism (Anglo-German naval arms race, Schlieffen Plan), Alliances (Triple Alliance: Germany/Austria-Hungary/Italy vs Triple Entente: France/Russia/Britain), Imperialism (competition for colonies created tensions), Nationalism (Pan-Slavism, Austro-Hungarian empire instability). Immediate trigger: Archduke Franz Ferdinand assassinated Sarajevo 28 June 1914 by Gavrilo Princip (Black Hand). Austria-Hungary ultimatum to Serbia. Alliance system dragged in all major powers. War declared August 1914.`,
+  chem:`Moles: SI unit for amount. 1 mole = 6.02×10²³ particles (Avogadro). Molar mass = g/mol. n=m/M. Concentration (mol/dm³) = n/V. Balancing equations: conservation of mass. Limiting reagent = used up first. Percentage yield = (actual/theoretical)×100. Atom economy = (desired product mass/total products mass)×100. Ideal gas: pV=nRT. Titration: moles acid = moles base at equivalence. pH = -log[H⁺].`,
+  physics:`Newton's Laws: 1st inertia — no net force = no acceleration. 2nd F=ma. 3rd equal opposite pairs. Momentum p=mv, conservation: Σp before = Σp after (no external force). Impulse J=FΔt=Δp. Elastic collision: KE conserved. Inelastic: KE lost. Work W=Fd cosθ. Power P=W/t=Fv. KE=½mv². GPE=mgh. Efficiency=(useful output/total input)×100. Waves: v=fλ. Snell's law: n₁sinθ₁=n₂sinθ₂.`,
+  psych:`Memory: Multi-Store Model (Atkinson & Shiffrin 1968) — Sensory Register→STM→LTM. STM: 7±2 items (Miller), 15-30s duration, acoustic encoding. LTM: unlimited capacity, potentially permanent, semantic. Working Memory Model (Baddeley & Hitch 1974): Central Executive (attentional), Phonological Loop (inner voice+ear), Visuospatial Sketchpad (inner eye), Episodic Buffer (links stores). Evidence: HM case study (hippocampus → can't form new LTM). Interference: proactive (old disrupts new), retroactive (new disrupts old).`,
+  econ:`Supply & Demand: Law of demand — P↑ → Qd↓ (inverse, ceteris paribus). Law of supply — P↑ → Qs↑. Equilibrium: Qs=Qd. Demand shifts right: income↑ (normal goods), substitute price↑, complement price↓. PED=%ΔQd÷%ΔP. |PED|>1 elastic (luxury), |PED|<1 inelastic (necessity). TR: elastic→lower price↑TR, inelastic→raise price↑TR. PES=%ΔQs÷%ΔP. YED: normal>0, inferior<0, luxury YED>1.`
+};
+function loadSample(k){ const ta=document.getElementById('notes'); ta.value=SAMPLES[k]; document.getElementById('ccount').textContent=ta.value.length+' characters'; }
+
+// ─── GENERATE ────────────────────────────────────────────────────────────────
+async function generate() {
+  expandInput();
+  const notes=document.getElementById('notes').value.trim();
+  if (!notes) { document.getElementById('notes').focus(); return; }
+
+  // PRO gate for essay mode
+  if (mode==='essay' && !isPro()) { openPaywall('Essay Feedback is a Pro feature'); return; }
+
+  // Free limit gate
+  if (!canGenerate()) { openPaywall("You've used all "+FREE_MAX+" free generations. Upgrade for unlimited access."); return; }
+
+  const btn=document.getElementById('gen-btn'); btn.disabled=true;
+  document.getElementById('gen-txt').textContent='⟳ Generating…';
+  document.getElementById('results').innerHTML=`<div class="lwrap"><div class="spin"></div><p>Analysing your ${subject} notes…</p></div>`;
+
+  const lc=`${examBoard} ${level}`;
+  const gs=level==='GCSE'?'GCSE grades 9-1':'A-Level grades A*,A,B,C,D,E';
+
+  const cardCount = window.selectedCount || 6;
+  const quizCount = window.selectedCount || 4;
+
+  function buildEssayPrompt(notes, lc, gs) {
+    const question = document.getElementById('essay-question')?.value?.trim() || '';
+    const marks = document.getElementById('essay-marks')?.value || '16';
+    const questionSection = question
+      ? `Exam question: "${question}"\nMarks available: ${marks}\n\n`
+      : `Marks available: ${marks}\n\n`;
+    return `You are a senior ${subject} examiner for ${lc} with 20 years marking experience.
+
+FIRST: Check if the text is actually an essay/extended written answer. If it is just notes, bullet points, or a list, return ONLY: {"notAnEssay":true,"message":"This looks like notes rather than an essay answer. Please paste your written response to the exam question."}
+
+If it IS a proper written answer, mark it against the ${lc} mark scheme for a ${marks}-mark question and return ONLY valid JSON:
+{"grade":"...","marksAwarded":${marks},"overall":"...","strengths":"...","improvements":"...","examinerComment":"...","markSchemePoints":["point 1 - awarded/not awarded","point 2 - awarded/not awarded"],"scores":{"knowledge":7,"analysis":6,"evaluation":6,"communication":7}}
+
+STRICT marking rules:
+- grade: use ${gs} — grade must match the marks awarded honestly
+- marksAwarded: give a number out of ${marks} — be strict
+- For ${marks} marks: award marks only for valid, relevant points with accurate detail
+- A 16-mark answer needs extended writing with argument, evidence AND evaluation to score above 10
+- Do NOT inflate grades — a short answer cannot score highly
+- overall: 3-4 brutally honest sentences
+- strengths: specific lines from the answer that earned marks
+- improvements: exact advice on what was missing for full marks
+- examinerComment: the comment an examiner writes on the paper
+- markSchemePoints: list each mark scheme point and whether the student hit it
+
+${questionSection}Student answer:
+${notes}`;
+  }
+
+  const PROMPTS={
+    flashcards:`You are an expert ${subject} teacher for ${lc}. Generate exactly ${cardCount} flashcards as a JSON array. Each object: {"question":"...","answer":"..."}. Pitch difficulty correctly for ${level}. Return ONLY a valid JSON array with no markdown, no explanation.
+
+Notes:
+${notes}`,
+    quiz:`You are an expert ${subject} teacher for ${lc}. Generate exactly ${quizCount} multiple choice questions as a JSON array. Each: {"question":"...","options":["A","B","C","D"],"correct":0,"explanation":"..."}. Make them genuine exam-style questions for ${level}. Return ONLY valid JSON array, no markdown.
+
+Notes:
+${notes}`,
+    essay:buildEssayPrompt(notes, lc, gs),
+    summary:`You are an expert ${subject} teacher for ${lc}. Create concise revision notes. Return ONLY valid JSON: {"title":"...","keyPoints":["...","..."],"keyTerms":[{"term":"...","definition":"..."}],"examTip":"..."}.
+
+Notes:
+${notes}`,
+    notes:`You are an expert ${subject} teacher for ${lc}. Transform the following raw text into comprehensive, well-structured study notes. Return ONLY valid JSON in this exact format: {"title":"...","introduction":"...","sections":[{"heading":"...","content":"...","bullets":["...","..."]}],"summary":"...","examTips":["...","..."]}.
+
+Keep the tone clear and academic. Each section needs a heading, a short paragraph, and 3-5 bullet points. Include 2-4 sections. Return ONLY valid JSON with no markdown.
+
+Raw text:
+${notes}`
+  };
+
+  try {
+    const res=await fetch(API_BASE+'/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:PROMPTS[mode]}]})
+    });
+    if (!res.ok) throw new Error('API error '+res.status);
+    const d=await res.json();
+    if (d.error) throw new Error(d.error.message||'API error');
+    const raw=d.content.map(x=>x.text||'').join('');
+    // Strip any markdown fences
+    const clean=raw.replace(/^```(?:json)?\s*/,'').replace(/\s*```\s*$/,'').trim();
+    const parsed=JSON.parse(clean);
+    // Count usage
+    if (!isPro()) {
+      freeUsed++;
+      localStorage.setItem('freeUsed',freeUsed);
+      if (sb&&currentUser) sb.from('profiles').update({free_generates_used:freeUsed}).eq('id',currentUser.id).then(()=>{});
+    }
+    refreshUI();
+    // Track usage stats
+    trackSession(mode, parsed);
+    renderResults(parsed);
+  } catch(e) {
+    document.getElementById('results').innerHTML=`<div class="lwrap"><p style="color:var(--red)">Error: ${e.message||'Something went wrong'}. Please try again.</p></div>`;
+    console.error('Generate error:',e);
+  }
+  btn.disabled=false; document.getElementById('gen-txt').textContent='✦ Generate';
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function tags(){ return `<span class="tag a">${subject}</span><span class="tag l">${level}</span><span class="tag">${examBoard}</span>`; }
+
+let inputCollapsed = false;
+function toggleInputCollapse() {
+  inputCollapsed = !inputCollapsed;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(inputCollapsed) {
+    ipanel.classList.add('collapsed');
+    btn.textContent = '▲ Show input';
+  } else {
+    ipanel.classList.remove('collapsed');
+    btn.textContent = '▼ Show results';
+  }
+}
+
+function collapseInput() {
+  inputCollapsed = true;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(ipanel) ipanel.classList.add('collapsed');
+  if(btn) { btn.textContent = '▲ Show input'; btn.classList.add('show'); }
+}
+
+function expandInput() {
+  inputCollapsed = false;
+  const ipanel = document.querySelector('.ipanel');
+  const btn = document.getElementById('results-toggle');
+  if(ipanel) ipanel.classList.remove('collapsed');
+  if(btn) { btn.textContent = '▼ Show results'; btn.classList.remove('show'); }
+}
+
+function renderResults(data) {
+  // Collapse input to give results more space, then scroll to top of results
+  collapseInput();
+  setTimeout(()=>{
+    const r = document.getElementById('results');
+    if(r) { r.scrollTop = 0; }
+  }, 100);
+  if (mode==='flashcards') {
+    statCards+=data.length; document.getElementById('stat-cards').textContent=statCards;
+    currentCards=data; renderCards(data,null);
+  } else if (mode==='quiz') {
+    statQuiz+=data.length; document.getElementById('stat-quiz').textContent=statQuiz;
+    const L=['A','B','C','D'];
+    document.getElementById('results').innerHTML=`
+      <div class="rh fade-in"><h2>Practice Quiz</h2><div>${tags()}</div></div>
+      <div class="qwrap">${data.map((q,qi)=>`
+        <div class="qq fade-in">
+          <div class="flabel">Question ${qi+1} of ${data.length}</div>
+          <h3>${q.question}</h3>
+          <div class="qopts">${q.options.map((o,oi)=>`
+            <button class="qopt" onclick="answerQ(${qi},${oi},${q.correct})" id="qo-${qi}-${oi}">
+              <span class="oletter">${L[oi]}</span>${o}
+            </button>`).join('')}</div>
+          <div class="qexp" id="qe-${qi}">💡 ${q.explanation}</div>
+        </div>`).join('')}</div>`;
+  } else if (mode==='essay') {
+    const gc={'A*':'#22c55e',A:'#22c55e',B:'var(--accent)',C:'var(--amber)',D:'#f97316',E:'var(--red)',9:'#22c55e',8:'#22c55e',7:'var(--accent)',6:'var(--accent)',5:'var(--amber)',4:'var(--amber)',3:'#f97316',2:'var(--red)',1:'var(--red)'}[String(data.grade)]||'var(--accent)';
+    const esMarks = document.getElementById('essay-marks')?.value||'16';
+    const esQ = document.getElementById('essay-question')?.value?.trim()||'';
+    document.getElementById('results').innerHTML=`
+      <div class="rh fade-in"><h2>Essay Feedback</h2><div>${tags()}</div></div>
+      <div class="ewrap fade-in">
+        ${esQ?`<div class="fcard"><div class="fh"><h3>Question</h3><span style="font-size:11px;color:var(--muted)">${esMarks} marks</span></div><div class="fb"><p style="font-size:14px;font-style:italic">${esQ}</p></div></div>`:''}
+        <div class="fcard">
+          <div class="fh">
+            <div>
+              <h3>Overall Grade</h3>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">${data.marksAwarded!=null?data.marksAwarded+'/'+esMarks+' marks':''}</div>
+            </div>
+            <div class="gbadge" style="color:${gc};font-size:1.8rem">${data.grade}</div>
+          </div>
+          <div class="fb">
+            <div class="fs"><p style="font-size:14px;line-height:1.8">${data.overall}</p></div>
+            <div class="fs"><h4>Scores</h4><div class="sbars">${Object.entries(data.scores||{}).map(([k,v])=>`
+              <div class="sbar"><div class="sbar-label">${k[0].toUpperCase()+k.slice(1)}</div>
+              <div class="sbar-bg"><div class="sbar-fill" style="width:${v*10}%;background:${v>=8?'var(--green)':v>=6?'var(--accent)':v>=4?'var(--amber)':'var(--red)'}"></div></div>
+              <div class="sbar-val">${v}/10</div></div>`).join('')}</div></div>
+            <div class="fs"><h4>✓ Strengths</h4><p style="font-size:14px;line-height:1.8">${data.strengths}</p></div>
+            <div class="fs"><h4>↑ How to improve</h4><p style="font-size:14px;line-height:1.8">${data.improvements}</p></div>
+            ${data.markSchemePoints?`<div class="fs"><h4>Mark Scheme Points</h4><ul style="padding-left:1.2rem;font-size:14px;line-height:2">${(data.markSchemePoints||[]).map(p=>`<li>${p}</li>`).join('')}</ul></div>`:''}
+            ${data.examinerComment?`<div class="fs" style="background:var(--surface2);border-radius:9px;padding:12px 14px;border-left:3px solid var(--amber)"><h4 style="color:var(--amber)">Examiner Comment</h4><p style="font-size:14px;line-height:1.8;margin-top:6px;font-style:italic">"${data.examinerComment}"</p></div>`:''}
+          </div>
+        </div>
+      </div>`;
+  } else if (mode==='summary') {
+    document.getElementById('results').innerHTML=`
+      <div class="rh fade-in"><h2>${data.title}</h2><div>${tags()}</div></div>
+      <div class="ewrap fade-in">
+        <div class="fcard"><div class="fh"><h3>Key Points</h3></div><div class="fb">${data.keyPoints.map((p,i)=>`
+          <div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start">
+            <span style="color:var(--accent);font-weight:700;font-size:12px;margin-top:3px;flex-shrink:0">${i+1}</span>
+            <p style="font-size:14px">${p}</p></div>`).join('')}</div></div>
+        <div class="fcard"><div class="fh"><h3>Key Terms</h3></div><div class="fb">${data.keyTerms.map(t=>`
+          <div style="margin-bottom:10px">
+            <div style="font-weight:600;font-size:14px;color:var(--accent);margin-bottom:2px">${t.term}</div>
+            <div style="font-size:13px;color:var(--muted)">${t.definition}</div>
+          </div>`).join('')}</div></div>
+        <div class="fcard"><div class="fh"><h3>💡 Exam Tip</h3></div><div class="fb"><p style="font-size:14px">${data.examTip}</p></div></div>
+      </div>`;
+  } else if (mode==='notes') {
+    const secs=(data.sections||[]).map(s=>{
+      const bulls=(s.bullets||[]).length ? '<ul style="padding-left:1.2rem;display:flex;flex-direction:column;gap:6px">'+s.bullets.map(b=>'<li style="font-size:14px;line-height:1.7">'+b+'</li>').join('')+'</ul>' : '';
+      return '<div class="fcard"><div class="fh"><h3>'+s.heading+'</h3></div><div class="fb">'+(s.content?'<p style="font-size:14px;line-height:1.8;margin-bottom:10px">'+s.content+'</p>':'')+bulls+'</div></div>';
+    }).join('');
+    const tips=(data.examTips||[]).length ? '<div class="fcard"><div class="fh"><h3>💡 Exam Tips</h3></div><div class="fb">'+data.examTips.map(t=>'<div style="display:flex;gap:10px;margin-bottom:10px"><span style="color:var(--amber);font-size:14px;flex-shrink:0">💡</span><p style="font-size:14px;line-height:1.7">'+t+'</p></div>').join('')+'</div></div>' : '';
+    document.getElementById('results').innerHTML='<div class="rh fade-in"><h2>'+data.title+'</h2><div>'+tags()+'</div></div><div class="ewrap fade-in">'+(data.introduction?'<div class="fcard"><div class="fh"><h3>Introduction</h3></div><div class="fb"><p style="font-size:14px;line-height:1.8">'+data.introduction+'</p></div></div>':'')+secs+(data.summary?'<div class="fcard"><div class="fh"><h3>Summary</h3></div><div class="fb"><p style="font-size:14px;line-height:1.8">'+data.summary+'</p></div></div>':'')+tips+'</div>';
+  }
+}
+
+function renderCards(cards,setId) {
+  const now=new Date();
+  const pro=isPro();
+  const dueCnt=cards.filter((_,i)=>{ const p=cardProgress[i]; return !p||new Date(p.next_review)<=now; }).length;
+  const srsBar = pro&&currentUser&&setId ? `
+    <div class="srs-bar fade-in">
+      <div class="srs-stats">
+        <div class="srs-stat"><div class="srs-sv" style="color:var(--red)">${dueCnt}</div><div class="srs-sl">Due</div></div>
+        <div class="srs-stat"><div class="srs-sv" style="color:var(--green)">${cards.length-dueCnt}</div><div class="srs-sl">Learned</div></div>
+        <div class="srs-stat"><div class="srs-sv">${cards.length}</div><div class="srs-sl">Total</div></div>
+      </div>
+    </div>` : '';
+  const saveBtn=`<button class="save-set-btn" onclick="openSaveModal()">💾 ${pro?'Save set':'Save set (Pro)'}</button>`;
+  document.getElementById('results').innerHTML=`
+    <div class="rh fade-in"><h2>Flashcards</h2><div>${tags()}<span style="font-size:12px;color:var(--muted)">${cards.length} cards</span></div></div>
+    ${saveBtn}${srsBar}
+    <div class="cgrid fade-in">${cards.map((c,i)=>{
+      const p=cardProgress[i];
+      const isDue=!p||new Date(p.next_review)<=now;
+      const dl=p?Math.ceil((new Date(p.next_review)-now)/86400000):null;
+      const badgeTxt=p?(isDue?'📅 Due now':'📅 In '+dl+'d'):'📅 New';
+      const badgeCls=isDue?'sr-due-now':'sr-ok';
+      const srCtrl=pro&&currentUser&&setId?`
+        <div class="src">
+          <button class="srcb h" onclick="rateSR('${setId}',${i},0)">😓 Hard</button>
+          <button class="srcb o" onclick="rateSR('${setId}',${i},3)">🤔 OK</button>
+          <button class="srcb e" onclick="rateSR('${setId}',${i},5)">✓ Easy</button>
+        </div>
+        <div class="sr-due" id="srdue-${i}">${p?(isDue?'Due for review':'Next review in '+dl+'d'):'Rate to start tracking'}</div>`
+        : pro&&currentUser?'<div class="sr-due" style="margin-top:8px">Save this set to track progress</div>'
+        : '<div class="sr-due" style="margin-top:8px;color:var(--amber)">⭐ Pro: spaced repetition tracking</div>';
+      return `<div class="fc">
+        <span class="sr-badge ${badgeCls}" id="srbadge-${i}">${badgeTxt}</span>
+        <div class="flabel">Question</div><div class="fq">${c.question}</div>
+        <div class="flabel" style="margin-top:8px">Answer</div><div class="fa">${c.answer}</div>
+        ${srCtrl}
+      </div>`;
+    }).join('')}</div>`;
+}
+
+function answerQ(qi,sel,correct) {
+  document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach((o,i)=>{
+    o.disabled=true;
+    if (i===correct) o.classList.add('correct');
+    else if (i===sel&&sel!==correct) o.classList.add('wrong');
+  });
+  const e=document.getElementById('qe-'+qi); if(e) e.classList.add('show');
+}
+
+// ─── MODALS ──────────────────────────────────────────────────────────────────
+function openM(id){ document.getElementById(id).classList.remove('hidden'); }
+function closeM(id){ document.getElementById(id).classList.add('hidden'); }
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let _tt;
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ─── PROGRESS & STATS ────────────────────────────────────────────────────────
+const BADGES = [
+  // Easy
+  {id:'first_session',icon:'🌱',name:'First Steps',desc:'Complete your very first revision session',check:s=>s.totalSessions>=1},
+  {id:'first_essay',icon:'✍️',name:'First Draft',desc:'Get your first essay marked',check:s=>s.totalEssays>=1},
+  {id:'cards_10',icon:'🃏',name:'Card Collector',desc:'Create 10 flashcards',check:s=>s.totalCards>=10},
+  {id:'quiz_5',icon:'🎯',name:'Quiz Starter',desc:'Answer 5 quiz questions',check:s=>s.totalQuiz>=5},
+  // Medium
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'Study 3 days in a row',check:s=>s.streak>=3},
+  {id:'streak_7',icon:'⚡',name:'Week Warrior',desc:'Study every day for a full week',check:s=>s.streak>=7},
+  {id:'cards_50',icon:'💡',name:'Card Shark',desc:'Create 50 flashcards in total',check:s=>s.totalCards>=50},
+  {id:'quiz_25',icon:'🎪',name:'Quiz Enthusiast',desc:'Answer 25 quiz questions',check:s=>s.totalQuiz>=25},
+  {id:'sessions_10',icon:'📖',name:'Regular Reviser',desc:'Complete 10 revision sessions',check:s=>s.totalSessions>=10},
+  {id:'subjects_3',icon:'📚',name:'Well-Rounded',desc:'Study 3 or more different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=3},
+  {id:'essay_5',icon:'🖊️',name:'Essay Expert',desc:'Get 5 essays marked',check:s=>s.totalEssays>=5},
+  // Hard
+  {id:'streak_14',icon:'🌟',name:'Fortnight Grind',desc:'Study every day for 14 days straight',check:s=>s.streak>=14},
+  {id:'streak_30',icon:'🏅',name:'Monthly Master',desc:'Study every day for 30 days',check:s=>s.streak>=30},
+  {id:'cards_100',icon:'💎',name:'Card Master',desc:'Create 100 flashcards in total',check:s=>s.totalCards>=100},
+  {id:'quiz_100',icon:'🏆',name:'Quiz Champion',desc:'Answer 100 quiz questions',check:s=>s.totalQuiz>=100},
+  {id:'sessions_50',icon:'🎓',name:'Dedicated Scholar',desc:'Complete 50 revision sessions',check:s=>s.totalSessions>=50},
+  {id:'subjects_5',icon:'🌍',name:'Polymath',desc:'Study 5 or more different subjects',check:s=>Object.keys(s.subjectStats||{}).length>=5},
+  // Legendary
+  {id:'streak_100',icon:'👑',name:'Century Streak',desc:'Study every single day for 100 days',check:s=>s.streak>=100},
+  {id:'cards_500',icon:'🚀',name:'Card Legend',desc:'Create 500 flashcards in total',check:s=>s.totalCards>=500},
+  {id:'cards_1000',icon:'🌌',name:'Flashcard God',desc:'Create 1,000 flashcards — the ultimate card collector',check:s=>s.totalCards>=1000},
+  {id:'quiz_500',icon:'🔱',name:'Quiz God',desc:'Answer 500 quiz questions',check:s=>s.totalQuiz>=500},
+  {id:'sessions_100',icon:'🏛️',name:'Revision Legend',desc:'Complete 100 revision sessions',check:s=>s.totalSessions>=100},
+  {id:'streak_365',icon:'💫',name:'Year of Study',desc:'Study every day for an entire year — extraordinary',check:s=>s.streak>=365},
+];
+
+function getStats() {
+  try {
+    return JSON.parse(localStorage.getItem('revise_stats') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveStats(stats) {
+  localStorage.setItem('revise_stats', JSON.stringify(stats));
+}
+
+function trackSession(mode, data) {
+  const stats = getStats();
+  const today = new Date().toISOString().split('T')[0];
+
+  stats.totalSessions = (stats.totalSessions || 0) + 1;
+  stats.totalCards = (stats.totalCards || 0) + (mode==='flashcards' ? (data.length||0) : 0);
+  stats.totalQuiz = (stats.totalQuiz || 0) + (mode==='quiz' ? (data.length||0) : 0);
+  stats.totalEssays = (stats.totalEssays || 0) + (mode==='essay' && !data.notAnEssay ? 1 : 0);
+
+  // Track subject stats
+  if (!stats.subjectStats) stats.subjectStats = {};
+  if (!stats.subjectStats[subject]) stats.subjectStats[subject] = 0;
+  stats.subjectStats[subject]++;
+
+  // Track daily activity
+  if (!stats.dailyActivity) stats.dailyActivity = {};
+  stats.dailyActivity[today] = (stats.dailyActivity[today] || 0) + 1;
+
+  // Daily goal progress
+  stats.todaySessions = stats.lastDate===today ? (stats.todaySessions||0)+1 : 1;
+  stats.lastDate = today;
+
+  // Streak calculation
+  const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
+  if (stats.lastActiveDate===yesterday || stats.lastActiveDate===today) {
+    if (stats.lastActiveDate!==today) stats.streak = (stats.streak||0)+1;
+  } else if (stats.lastActiveDate && stats.lastActiveDate!==today) {
+    stats.streak = 1;
+  } else {
+    stats.streak = (stats.streak||0) + (stats.lastActiveDate===today?0:1);
+  }
+  stats.lastActiveDate = today;
+
+  // Weekly chart data
+  if (!stats.weeklyData) stats.weeklyData = {};
+  stats.weeklyData[today] = (stats.weeklyData[today]||0)+1;
+
+  saveStats(stats);
+
+  // Update sidebar stats
+  document.getElementById('stat-cards').textContent = statCards;
+  document.getElementById('stat-quiz').textContent = statQuiz;
+  document.getElementById('stat-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('stat-total-gen').textContent = stats.totalSessions||0;
+
+  // Check for new badges
+  checkBadges(stats);
+}
+
+function showBadgeInfo(id) {
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  const b = BADGES.find(x=>x.id===id);
+  if(!b) return;
+  const isEarned = earned.includes(id);
+  // Show a simple toast with the badge info
+  const msg = isEarned
+    ? `${b.icon} ${b.name} — ${b.desc}`
+    : `🔒 ${b.name} — ${b.desc}`;
+  toast(msg, isEarned?'success':'success');
+}
+
+function checkBadges(stats) {
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  BADGES.forEach(b => {
+    if (!earned.includes(b.id) && b.check(stats)) {
+      earned.push(b.id);
+      localStorage.setItem('earned_badges', JSON.stringify(earned));
+      toast('🏆 Badge earned: '+b.name+'!', 'success');
+    }
+  });
+}
+
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const tabEl = document.getElementById('tab-'+tab);
+  const panelEl = document.getElementById('panel-'+tab);
+  if(tabEl) tabEl.classList.add('active');
+  if(panelEl) panelEl.classList.add('active');
+  if (tab==='progress') refreshProgressPanel();
+}
+
+function openProgress() { switchTab('progress'); }
+
+function refreshProgressPanel() {
+  const stats = getStats();
+  const earned = JSON.parse(localStorage.getItem('earned_badges')||'[]');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  const todayKey = today.toISOString().split('T')[0];
+
+  // Top stats
+  document.getElementById('pg-streak').textContent = '🔥 '+(stats.streak||0);
+  document.getElementById('pg-sessions').textContent = stats.totalSessions||0;
+  document.getElementById('pg-cards').textContent = stats.totalCards||0;
+  document.getElementById('pg-quiz').textContent = stats.totalQuiz||0;
+
+  // Goal ring
+  const dailyGoal = parseInt(localStorage.getItem('daily_goal')||'3');
+  const todayDone = stats.todaySessions||0;
+  const pct = Math.min(100, Math.round(todayDone/dailyGoal*100));
+  document.getElementById('goal-ring-circle').style.strokeDashoffset = 163-(pct/100)*163;
+  document.getElementById('goal-ring-pct').textContent = pct+'%';
+  document.getElementById('goal-title-prog').textContent = 'Complete '+dailyGoal+' sessions today';
+  document.getElementById('goal-sub-prog').textContent = todayDone+' of '+dailyGoal+' done';
+
+  // Weekly chart
+  const chart = document.getElementById('prog-weekly-chart');
+  const labels = document.getElementById('prog-weekly-labels');
+  chart.innerHTML=''; labels.innerHTML='';
+  const vals = Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    return (stats.weeklyData||{})[d.toISOString().split('T')[0]]||0;
+  });
+  const maxVal = Math.max(1,...vals);
+  vals.forEach((val,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const isToday=key===todayKey;
+    const bar=document.createElement('div');
+    bar.className='chart-bar'; bar.style.height=Math.max(4,Math.round((val/maxVal)*50))+'px';
+    if(isToday||val>0) bar.style.opacity='1'; else bar.style.opacity='.25';
+    if(isToday) bar.style.background='var(--accent)';
+    chart.appendChild(bar);
+    const lbl=document.createElement('div'); lbl.className='chart-label';
+    lbl.textContent=days[d.getDay()][0]+(isToday?'*':'');
+    if(isToday) lbl.style.color='var(--accent)';
+    labels.appendChild(lbl);
+  });
+
+  // Streak row
+  const streakRow=document.getElementById('prog-streak-row'); streakRow.innerHTML='';
+  Array.from({length:7},(_,i)=>{
+    const d=new Date(today); d.setDate(d.getDate()-6+i);
+    const key=d.toISOString().split('T')[0];
+    const val=(stats.weeklyData||{})[key]||0;
+    const isToday=key===todayKey;
+    const div=document.createElement('div');
+    div.className='streak-day '+(isToday?'today':val>0?'done':'missed');
+    div.textContent=days[d.getDay()][0];
+    div.title=days[d.getDay()]+': '+(val>0?val+' sessions':'No activity');
+    streakRow.appendChild(div);
+  });
+
+  // Subject breakdown
+  const subjList=document.getElementById('prog-subj-list');
+  const ss=stats.subjectStats||{};
+  if(!Object.keys(ss).length){
+    subjList.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:.5rem">Generate flashcards to see subject progress</div>';
+  } else {
+    const max=Math.max(...Object.values(ss));
+    subjList.innerHTML='<div class="subj-prog-list">'+Object.entries(ss).sort((a,b)=>b[1]-a[1]).map(([subj,count])=>`
+      <div class="subj-prog-row">
+        <div class="subj-prog-top"><span class="subj-prog-name">${subj}</span><span class="subj-prog-pct">${count} session${count>1?'s':''}</span></div>
+        <div class="subj-prog-bg"><div class="subj-prog-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+      </div>`).join('')+'</div>';
+  }
+
+  // Exam countdowns
+  renderExamsMain();
+
+  // Badges
+  const badgesGrid=document.getElementById('prog-badges-grid');
+  if(badgesGrid) badgesGrid.innerHTML=BADGES.map(b=>`
+    <div class="badge-item ${earned.includes(b.id)?'earned':'locked'}" onclick="showBadgeInfo('${b.id}')" style="cursor:pointer">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+      ${earned.includes(b.id)?'<div style="font-size:9px;color:var(--green);margin-top:2px">✓ Earned</div>':'<div style="font-size:9px;color:var(--muted);margin-top:2px">Locked</div>'}
+    </div>`).join('');
+}
+
+// Exams
+function addExam() {
+  const name = document.getElementById('exam-name-input').value.trim();
+  const date = document.getElementById('exam-date-input').value;
+  if (!name||!date) { toast('Please enter exam name and date','error'); return; }
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  exams.push({name, date, id: Date.now()});
+  exams.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  localStorage.setItem('exams', JSON.stringify(exams));
+  document.getElementById('exam-name-input').value='';
+  document.getElementById('exam-date-input').value='';
+  renderExamsMain();
+}
+
+function getExamDays(dateStr) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const examDate = new Date(dateStr); examDate.setHours(0,0,0,0);
+  return Math.round((examDate-now)/(1000*60*60*24));
+}
+
+function renderExamsMain() {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const list = document.getElementById('exams-list-main');
+  if (!list) return;
+  if (!exams.length) {
+    list.innerHTML='<div class="exam-empty">No exams added yet — enter an exam name and date above to start your countdown</div>';
+    return;
+  }
+  // Sort by date
+  const sorted = [...exams].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  list.innerHTML = sorted.map(e=>{
+    const days = getExamDays(e.date);
+    const isPast = days < 0;
+    const isToday = days === 0;
+    const colour = isPast?'var(--muted)':days<=7?'var(--red)':days<=21?'var(--amber)':'var(--green)';
+    // Progress bar: 0 days = 100%, 180 days = 0%
+    const startDays = 180;
+    const pct = isPast?100:Math.max(0,Math.round((1-days/startDays)*100));
+    const barColour = days<=7?'var(--red)':days<=21?'var(--amber)':'var(--accent)';
+    const dayLabel = isPast?'Past':isToday?'Today!':days===1?'1 day':days+' days';
+    const unitLabel = isPast?'exam passed':isToday?'good luck!':'to go';
+    return `<div class="exam-countdown-card">
+      <div class="exam-cd-left">
+        <div class="exam-cd-name">${e.name}</div>
+        <div class="exam-cd-date">${new Date(e.date).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+        ${!isPast?`<div class="exam-cd-bar-wrap">
+          <div class="exam-cd-bar-bg"><div class="exam-cd-bar-fill" style="width:${pct}%;background:${barColour}"></div></div>
+          <div class="exam-cd-bar-label">${pct}% through revision period</div>
+        </div>`:''}
+      </div>
+      <div class="exam-cd-right">
+        <div class="exam-cd-num" style="color:${colour}">${dayLabel}</div>
+        <div class="exam-cd-unit">${unitLabel}</div>
+      </div>
+      <button class="exam-cd-del" onclick="deleteExam(${e.id})" title="Remove exam">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteExam(id) {
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]').filter(e=>e.id!==id);
+  localStorage.setItem('exams', JSON.stringify(exams));
+  renderExamsMain();
+}
+
+// Timetable
+function generateTimetable() {
+  const stats = getStats();
+  const ss = stats.subjectStats||{};
+  const exams = JSON.parse(localStorage.getItem('exams')||'[]');
+  const sessionsPerDay = parseInt(document.getElementById('daily-goal-select')?.value||'3');
+  const sessionLen = document.getElementById('session-len-select')?.value||'45';
+
+  // Build subject list - prioritise subjects with exams, then studied subjects, then current subject
+  let subjects = [];
+  exams.forEach(e => { if (!subjects.includes(e.name.split(' ')[0])) subjects.push(e.name); });
+  Object.keys(ss).forEach(s => { if (!subjects.includes(s)) subjects.push(s); });
+  if (!subjects.length) subjects = [subject];
+
+  const timetable = [];
+  const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const startDay = new Date();
+  startDay.setDate(startDay.getDate()-(startDay.getDay()||7)+1);
+
+  const times_weekday = ['4:00 PM','5:30 PM','7:00 PM','8:30 PM','3:30 PM'];
+  const times_weekend = ['10:00 AM','12:00 PM','2:00 PM','4:00 PM','6:00 PM'];
+
+  for(let i=0;i<7;i++){
+    const d = new Date(startDay); d.setDate(startDay.getDate()+i);
+    const isWeekend = i>=5;
+    const dayTimes = isWeekend ? times_weekend : times_weekday;
+    const daySessionCount = isWeekend ? Math.min(sessionsPerDay+1, 4) : sessionsPerDay;
+    const sessions = [];
+
+    for(let j=0;j<daySessionCount;j++){
+      // Prioritise subjects with upcoming exams
+      const upcomingExamSubjects = exams
+        .filter(e=>getExamDays(e.date)>0&&getExamDays(e.date)<=21)
+        .map(e=>e.name);
+      let chosenSubject;
+      if(upcomingExamSubjects.length && j===0) {
+        chosenSubject = upcomingExamSubjects[(i)%upcomingExamSubjects.length];
+      } else {
+        chosenSubject = subjects[(i*daySessionCount+j)%subjects.length];
+      }
+      sessions.push({
+        subject: chosenSubject,
+        time: dayTimes[j]||dayTimes[dayTimes.length-1],
+        duration: sessionLen+' min',
+        id: d.toISOString().split('T')[0]+'-'+j
+      });
+    }
+    timetable.push({date:d.toISOString().split('T')[0], dayName:days[i], sessions});
+  }
+
+  localStorage.setItem('timetable', JSON.stringify(timetable));
+  renderTimetableMain();
+  toast('✓ Your personalised timetable is ready!','success');
+}
+
+function renderTimetableMain() {
+  const timetable = JSON.parse(localStorage.getItem('timetable')||'[]');
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const output = document.getElementById('tt-week-output');
+  const container = document.getElementById('tt-days-container');
+  if (!output||!container) return;
+
+  if(!timetable.length){ output.style.display='none'; return; }
+  output.style.display='block';
+
+  const today=new Date().toISOString().split('T')[0];
+  container.innerHTML=timetable.map(day=>{
+    const dayCompleted = day.sessions.filter(s=>completed.includes(s.id)).length;
+    const dayTotal = day.sessions.length;
+    const pct = dayTotal>0?Math.round(dayCompleted/dayTotal*100):0;
+    const isToday = day.date===today;
+    return `<div class="tt-day-card">
+      <div class="tt-day-hd">
+        <div class="tt-day-hd-name">
+          ${day.dayName}
+          ${isToday?'<span class="tt-today-pill">TODAY</span>':''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:11px;color:var(--muted)">${dayCompleted}/${dayTotal} done</div>
+          <div class="tt-day-hd-date">${new Date(day.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+        </div>
+      </div>
+      <div class="tt-progress-bar"><div class="tt-progress-fill" style="width:${pct}%"></div></div>
+      ${day.sessions.map(s=>`
+        <div class="tt-session-row${completed.includes(s.id)?' completed':''}">
+          <div class="tt-chk${completed.includes(s.id)?' done':''}" onclick="toggleTT('${s.id}')">
+            ${completed.includes(s.id)?'✓':''}
+          </div>
+          <div class="tt-sess-subj">${s.subject}</div>
+          <div class="tt-sess-meta">
+            <div>${s.time}</div>
+            <div class="tt-sess-time">${s.duration}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function toggleTT(id) {
+  const completed = JSON.parse(localStorage.getItem('tt_completed')||'[]');
+  const idx = completed.indexOf(id);
+  if(idx>=0) completed.splice(idx,1); else { completed.push(id); trackSession('timetable',{}); }
+  localStorage.setItem('tt_completed', JSON.stringify(completed));
+  renderTimetableMain();
+}
+
+// Initialise stats on load
+function initStats() {
+  const stats = getStats();
+  const el1 = document.getElementById('stat-streak');
+  const el2 = document.getElementById('stat-total-gen');
+  if(el1) el1.textContent = '🔥 '+(stats.streak||0);
+  if(el2) el2.textContent = stats.totalSessions||0;
+}
+
+// ─── MOBILE NAV ──────────────────────────────────────────────────────────────
+function mobileTab(tab) {
+  // Update active state
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('bnav-'+tab);
+  if (btn) btn.classList.add('active');
+
+  if (tab === 'home') { closeMobDrawer(); return; }
+
+  const panel = document.getElementById('mob-drawer-content');
+
+  if (tab === 'subjects') {
+    panel.innerHTML = `
+      <div class="sh3">Level</div>
+      <div class="level-toggle" style="margin-bottom:1rem">
+        <button class="lvl-btn${level==='GCSE'?' active':''}" onclick="setLevel('GCSE',this);renderMobSubjects()">GCSE</button>
+        <button class="lvl-btn${level==='A-Level'?' active':''}" onclick="setLevel('A-Level',this);renderMobSubjects()">A-Level</button>
+      </div>
+      <div class="sh3">Exam Board</div>
+      <select class="esel" style="margin-bottom:1rem" onchange="examBoard=this.value;document.getElementById('sp-board').textContent=this.value">
+        <option${examBoard==='AQA'?' selected':''}>AQA</option>
+        <option${examBoard==='Edexcel'?' selected':''}>Edexcel</option>
+        <option${examBoard==='OCR'?' selected':''}>OCR</option>
+        <option${examBoard==='WJEC'?' selected':''}>WJEC</option>
+        <option${examBoard==='Cambridge (CAIE)'?' selected':''}>Cambridge (CAIE)</option>
+        <option${examBoard==='Eduqas'?' selected':''}>Eduqas</option>
+      </select>
+      <div class="sh3">Subject</div>
+      <input class="subj-search" type="text" placeholder="Search subjects..." oninput="renderMobSubjects(this.value)" style="margin-bottom:8px">
+      <div id="mob-subj-cats"></div>`;
+    renderMobSubjects();
+    openMobDrawer();
+  }
+
+  if (tab === 'modes') {
+    panel.innerHTML = `
+      <div class="sh3">Study Mode</div>
+      <div class="mode-list">
+        <button class="mbtn${mode==='flashcards'?' active':''}" onclick="setMode('flashcards',this);closeMobDrawer();document.getElementById('bnav-home').click()">
+          <span class="micon">🃏</span><div><div class="mlabel">Flashcards</div><div class="msub">Q&A from your notes</div></div>
+        </button>
+        <button class="mbtn${mode==='quiz'?' active':''}" onclick="setMode('quiz',this);closeMobDrawer();document.getElementById('bnav-home').click()">
+          <span class="micon">🎯</span><div><div class="mlabel">Practice Quiz</div><div class="msub">MCQs with explanations</div></div>
+        </button>
+        <button class="mbtn${mode==='essay'?' active':''}" onclick="handleProMode('essay',this);closeMobDrawer()">
+          <span class="micon">✍️</span><div><div class="mlabel">Essay Feedback</div><div class="msub">Mark scheme analysis</div></div>
+          <span class="pro-lock">PRO</span>
+        </button>
+        <button class="mbtn${mode==='summary'?' active':''}" onclick="setMode('summary',this);closeMobDrawer();document.getElementById('bnav-home').click()">
+          <span class="micon">📋</span><div><div class="mlabel">Key Points</div><div class="msub">Concise revision notes</div></div>
+        </button>
+        <button class="mbtn${mode==='notes'?' active':''}" onclick="setMode('notes',this);closeMobDrawer();document.getElementById('bnav-home').click()">
+          <span class="micon">📝</span><div><div class="mlabel">Study Notes</div><div class="msub">Full written notes from your text</div></div>
+        </button>
+      </div>
+      <div style="margin-top:1rem;padding:10px 13px;background:var(--surface2);border-radius:9px;font-size:13px;color:var(--muted)">
+        Current: <span style="color:var(--accent);font-weight:600">${mode.charAt(0).toUpperCase()+mode.slice(1)}</span> · 
+        <span style="color:var(--text)">${subject}</span> · 
+        <span>${level}</span>
+      </div>`;
+    openMobDrawer();
+  }
+
+  if (tab === 'sets') {
+    if (!currentUser) {
+      panel.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:10px">💾</div>
+        <p style="margin-bottom:1rem">Sign in to save and access your flashcard sets</p>
+        <button class="gen-btn" onclick="closeMobDrawer();openAuth()">Sign In</button>
+      </div>`;
+    } else if (!isPro()) {
+      panel.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:10px">⭐</div>
+        <p style="margin-bottom:1rem">Upgrade to Pro to save unlimited flashcard sets</p>
+        <button class="gen-btn" onclick="closeMobDrawer();openPaywall('Saving sets is a Pro feature')">Upgrade to Pro</button>
+      </div>`;
+    } else {
+      panel.innerHTML = `
+        <div class="sh3">Saved Sets</div>
+        ${savedSets.length ? savedSets.map(s=>`
+          <div class="set-item" onclick="loadSet('${s.id}');closeMobDrawer();mobileTab('home')">
+            <div style="flex:1;min-width:0">
+              <div class="set-title">${s.title}</div>
+              <div class="set-meta">${s.subject} · ${s.level} · ${s.cards.length} cards</div>
+            </div>
+            <button class="set-del" onclick="event.stopPropagation();deleteSet('${s.id}');mobileTab('sets')">✕</button>
+          </div>`).join('') : '<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:13px">No saved sets yet — generate some flashcards and save them!</div>'}`;
+    }
+    openMobDrawer();
+  }
+
+  if (tab === 'account') {
+    panel.innerHTML = `
+      <div class="sh3">Account</div>
+      ${currentUser ? `
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:1rem">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:3px">Signed in as</div>
+          <div style="font-size:14px;font-weight:500;word-break:break-all">${currentUser.email}</div>
+          <div style="margin-top:8px">${isPro() ? '<span class="pro-badge">⭐ Pro</span>' : '<span class="free-pill">Free Plan</span>'}</div>
+        </div>
+        ${!isPro() ? `<button class="gen-btn" style="width:100%;justify-content:center;margin-bottom:10px" onclick="closeMobDrawer();openPaywall('upgrade')">⭐ Upgrade to Pro — £4.99/mo</button>` : ''}
+        <button class="nbtn" style="width:100%;text-align:center;padding:10px;margin-bottom:10px" onclick="openSettings();closeMobDrawer()">⚙️ Settings</button>
+        <button class="nbtn" style="width:100%;text-align:center;padding:10px;color:var(--red);border-color:rgba(239,68,68,.3)" onclick="doSignOut();closeMobDrawer()">Sign Out</button>
+      ` : `
+        <div style="text-align:center;padding:1.5rem 0">
+          <div style="font-size:36px;margin-bottom:10px">👤</div>
+          <p style="color:var(--muted);margin-bottom:1rem;font-size:13px">Sign in to save progress and access Pro features</p>
+          <button class="gen-btn" style="width:100%;justify-content:center" onclick="closeMobDrawer();openAuth()">Sign In / Sign Up</button>
+        </div>
+      `}`;
+    openMobDrawer();
+  }
+}
+
+function renderMobSubjects(f='') {
+  const c = document.getElementById('mob-subj-cats');
+  if (!c) return;
+  c.innerHTML = '';
+  const fl = f ? f.toLowerCase() : '';
+  Object.entries(SD).forEach(([cat, subs]) => {
+    const list = subs.filter(s => {
+      if (level==='GCSE' && s.a) return false;
+      if (level==='A-Level' && s.g) return false;
+      return !fl || s.n.toLowerCase().includes(fl);
+    });
+    if (!list.length) return;
+    const d = document.createElement('div');
+    d.style.marginBottom = '10px';
+    d.innerHTML = `<div class="scat-label">${cat}</div><div class="scat-grid">${list.map(s=>`
+      <button class="sbtn${s.n===subject?' active':''}" onclick="pickSubject('${s.n.replace(/'/g,"\'")}',this);document.getElementById('sp-sub').textContent='${s.n.replace(/'/g,"\'")}';closeMobDrawer();mobileTab('home')">
+        <span class="si">${s.i}</span>${s.n}
+      </button>`).join('')}</div>`;
+    c.appendChild(d);
+  });
+}
+
+function openMobDrawer() {
+  document.getElementById('mob-drawer').classList.add('open');
+}
+function closeMobDrawer(e) {
+  if (e && e.target !== document.getElementById('mob-drawer') && e.target !== document.querySelector('.mob-drawer-bg')) return;
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('bnav-home').classList.add('active');
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+// Load libraries after DOM ready
+window.addEventListener('load', ()=>{
+  initSupabase();
+  initPDF();
+  renderSubjs();
+  refreshUI();
+  initStats();
+  updateCountSelector();
+  // Set theme toggle
+  const t=localStorage.getItem('theme')||'dark';
+  const tog=document.getElementById('dark-tog');
+  if (tog) tog.checked=(t==='dark');
+  // Check if returning from Stripe redirect
+  checkReturnPayment();
+});
+</script>
+<!-- Load libraries async - safe order -->
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+</body>
+</html>
